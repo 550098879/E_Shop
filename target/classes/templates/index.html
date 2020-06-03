@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="icon" href="" type="image/x-icon"/>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <td>管理员id</td>
+            <td>登录名</td>
+            <td>状态</td>
+            <td>职位</td>
+        </tr>
+
+        <tr th:each="user:${list}" >
+            <td th:text="${user.userId}"></td>
+            <td th:text="${user.loginName}"></td>
+            <td th:text="${user.status}"></td>
+            <td th:text="${user.userRole}"></td>
+        </tr>
+
+
+    </table>
+
+</body>
+</html>
