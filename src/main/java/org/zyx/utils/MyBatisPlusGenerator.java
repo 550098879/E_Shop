@@ -38,7 +38,7 @@ public class MyBatisPlusGenerator {
 
         //5.设置包信息
         PackageConfig packageConfig = new PackageConfig();
-        packageConfig.setParent("org.zyx");//设置父包
+        packageConfig.setParent("org.zyx.generator");//设置父包
         //packageConfig.setModuleName("generator");//在父包中添加一个新的包,将生成的文件添加到该包中,避免冲突
         //设置包名,有默认的包名配置,也可以自己修改
         packageConfig.setController("controller");
