@@ -25,8 +25,6 @@ public class DruidConfig {
         DruidDataSource druidDataSource = new DruidDataSource();
         return druidDataSource;
     }
-
-
     //1.配置servlet
     @Bean
     public ServletRegistrationBean statViewServlet(){

@@ -1,10 +1,13 @@
 package org.zyx.entity;
 
 import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,29 +21,29 @@ import lombok.experimental.Accessors;
  * @since 2020-06-03
  */
 @Data
-  @EqualsAndHashCode(callSuper = false)
-  @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 public class Store implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-      @TableId(value = "store_id", type = IdType.AUTO)
-      private Integer storeId;
+    @TableId(value = "store_id", type = IdType.AUTO)
+    private Integer storeId;
 
-      /**
+    /**
      * 买家主键
      */
-      private Integer buyerId;
+    private Integer buyerId;
 
-      /**
+    /**
      * 充值时间
      */
-      private LocalDateTime storeTime;
+    private LocalDateTime storeTime;
 
-      /**
+    /**
      * 充值金额
      */
-      private BigDecimal amount;
+    private BigDecimal amount;
 
 
 }
