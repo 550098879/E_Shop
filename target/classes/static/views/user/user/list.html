@@ -8,6 +8,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="/js/jquery-1.7.2.min.js"></script>
   <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
   <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
 </head>
@@ -107,9 +108,9 @@
           ,title: '敏感操作，请验证口令'
         }, function(value, index){
           layer.close(index);
-          
           layer.confirm('确定删除吗？', function(index) {
-            
+
+
             //执行 Ajax 后重载
             /*
             admin.req({
@@ -138,10 +139,11 @@
             //监听提交
             iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
               var field = data.field; //获取提交的字段
-              
+
               //提交 Ajax 成功后，静态更新表格中的数据
+              $.post("/users/addUsers",field);
               //$.ajax({});
-              table.reload('LAY-user-front-submit'); //数据刷新
+              table.reload("LAY-user-manage"); //数据刷新
               layer.close(index); //关闭弹层
             });  
             
