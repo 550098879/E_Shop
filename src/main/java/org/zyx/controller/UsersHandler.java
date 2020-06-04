@@ -37,5 +37,10 @@ public class UsersHandler {
         usersMapper.deleteById(userId);
     }
 
+    @GetMapping("/updateById")
+    public void updateById(Users users){
+        usersMapper.updateById(users);
+    }
+
 
 }

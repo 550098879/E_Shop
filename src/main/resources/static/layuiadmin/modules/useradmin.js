@@ -35,6 +35,7 @@
             })
         }); else if ("edit" === e.event) {
             t(e.tr);
+            var userId = e.data.userId;
             layer.open({
                 type: 2,
                 title: "编辑用户",
@@ -47,8 +48,9 @@
                         n = t.find("iframe").contents().find("#" + r);
                     l.layui.form.on("submit(" + r + ")", function (t) {
                         t.field;
-
-                        i.reload("LAY-user-front-submit"), layer.close(e)
+                        var $ = layui.jquery;
+                        $.get("/users/updateById",{"userId":userId,"loginName":t.field.loginName,"psw":t.field.psw,})
+                        i.reload("LAY-user-manage"), layer.close(e)
                     }), n.trigger("click")
                 },
                 success: function (e, t) {
