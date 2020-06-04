@@ -29,7 +29,8 @@
                 return;
             }
             layer.close(i), layer.confirm("真的删除行么", function (t) {
-                $.get("/users/deleteById/"+e.data.userId)
+                var $ = layui.jquery;
+                $.get("/users/deleteById",{"userId": e.data.userId,})
                 e.del(), layer.close(t)
             })
         }); else if ("edit" === e.event) {
@@ -39,13 +40,14 @@
                 title: "编辑用户",
                 content: "../../../views/user/user/userform.html",
                 maxmin: !0,
-                area: ["400px", "300px"],
+                area: ["450px", "300px"],
                 btn: ["确定", "取消"],
                 yes: function (e, t) {
                     var l = window["layui-layer-iframe" + e], r = "LAY-user-front-submit",
                         n = t.find("iframe").contents().find("#" + r);
                     l.layui.form.on("submit(" + r + ")", function (t) {
                         t.field;
+
                         i.reload("LAY-user-front-submit"), layer.close(e)
                     }), n.trigger("click")
                 },

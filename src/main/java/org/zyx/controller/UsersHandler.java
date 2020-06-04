@@ -29,12 +29,11 @@ public class UsersHandler {
 
     @PostMapping("/addUsers")
     public void addUser(Users users){
-        System.out.println(users);
         usersMapper.insert(users);
     }
 
-    @GetMapping("/deleteById/{userId}")
-    public void deleteById(@PathVariable("userId") int userId){
+    @GetMapping("/deleteById")
+    public void deleteById(int userId){
         usersMapper.deleteById(userId);
     }
 
