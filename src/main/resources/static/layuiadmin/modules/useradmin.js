@@ -141,5 +141,123 @@
                 }
             })
         }
+    }),i.render({
+        elem: "#LAY-goods-type",
+        url: '/goods/findAllType',
+        cols: [[{type: "checkbox", fixed: "left"},
+            {field: "typeId", width: 100, title: "类型ID", sort: !0},
+            {field: "typeName", title: "类别名", width: 200}, // templet: "#imgTpl" 加载图片
+            {field: "userName", title: "创建者" , width: 200 },
+            {field: "superName", title: "上级类别" , width: 200 },
+            {
+                title: "操作",
+                width: 200,
+                align: "center",
+                fixed: "right",
+                toolbar: "#table-type-handle"
+            }
+        ]],
+        page: !0,
+        limit: 10,
+        height: "full-220",
+        text: "对不起，加载出现异常！"
+    }), i.on("tool(LAY-goods-type)", function (e) {
+        e.data;
+        if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
+            if(t != 123){
+                layer.alert("口令错误");
+                return;
+            }
+            layer.close(i), layer.confirm("确定删除此管理员?", function (t) {
+                var $ = layui.jquery;
+                $.get("/users/deleteById",{"userId": e.data.userId,})
+                e.del(), layer.close(t)
+            })
+        }); else if ("edit" === e.event) {
+            t(e.tr);
+            var userId = e.data.userId;
+            layer.open({
+                type: 2,
+                title: "编辑用户",
+                content: "../../../views/user/user/userform.html",
+                maxmin: !0,
+                area: ["450px", "300px"],
+                btn: ["确定", "取消"],
+                yes: function (e, t) {
+                    var l = window["layui-layer-iframe" + e], r = "LAY-user-front-submit",
+                        n = t.find("iframe").contents().find("#" + r);
+                    l.layui.form.on("submit(" + r + ")", function (t) {
+                        t.field;
+                        var $ = layui.jquery;
+                        $.get("/users/updateById",{"userId":userId,"loginName":t.field.loginName,"psw":t.field.psw,})
+                        i.reload("LAY-user-manage"), layer.close(e)
+                    }), n.trigger("click")
+                },
+                success: function (e, t) {
+                }
+            })
+        }
+    }),  i.render({
+        elem: "#LAY-goods-list",
+        url: '/goods/findAllGood',
+        cols: [[{type: "checkbox", fixed: "left"},
+            {field: "goodId", width: 100, title: "商品ID", sort: !0 ,templet:function(data){return data.goods.goodId;}},
+            {field: "goodsName", title: "商品名", width: 120 ,templet:function(data){return data.goods.goodsName;}}, // templet: "#imgTpl" 加载图片
+            {field: "typeName", title: "类别" , width: 120 },
+            {field: "superName", title: "上级类别" , width: 120 },
+            {field: "price", title: "单价" , width: 120 , sort: !0 ,templet:function(data){return data.goods.price;}},
+            {field: "stock", title: "库存" , width: 120 , sort: !0 ,templet:function(data){return data.goods.stock;}},
+            {field: "status", title: "状态" , width: 120 ,templet:function(data){
+                    return data.goods.status == 0 ? "未上架" : "已上架";
+                }},
+            {field: "remark", title: "备注" , width: 120 ,templet:function(data){return data.goods.remark;}},
+            {
+                title: "操作",
+                width: 200,
+                align: "center",
+                fixed: "right",
+                toolbar: "#table-list-handle"
+            }
+        ]],
+        page: !0,
+        limit: 10,
+        height: "full-220",
+        text: "对不起，加载出现异常！"
+    }), i.on("tool(LAY-goods-list)", function (e) {
+        e.data;
+        if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
+            if(t != 123){
+                layer.alert("口令错误");
+                return;
+            }
+            layer.close(i), layer.confirm("确定删除此商品?", function (t) {
+                var $ = layui.jquery;
+                //$.get("/users/deleteById",{"userId": e.data.userId,})
+                e.del(), layer.close(t)
+            })
+        }); else if ("edit" === e.event) {
+            t(e.tr);
+            var userId = e.data.userId;
+            layer.open({
+                type: 2,
+                title: "编辑用户",
+                content: "../../../views/user/user/userform.html",
+                maxmin: !0,
+                area: ["450px", "300px"],
+                btn: ["确定", "取消"],
+                yes: function (e, t) {
+                    var l = window["layui-layer-iframe" + e], r = "LAY-user-front-submit",
+                        n = t.find("iframe").contents().find("#" + r);
+                    l.layui.form.on("submit(" + r + ")", function (t) {
+                        t.field;
+                        var $ = layui.jquery;
+                        $.get("/users/updateById",{"userId":userId,"loginName":t.field.loginName,"psw":t.field.psw,})
+                        i.reload("LAY-user-manage"), layer.close(e)
+                    }), n.trigger("click")
+                },
+                success: function (e, t) {
+                }
+            })
+        }
     }), e("useradmin", {})
 });

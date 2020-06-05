@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 管理员 iframe 框</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="/js/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+
+    <script type="text/javascript">
+        $(function(){
+            debugger
+            console.log("测试测试测试");
+            let superType = $("#superId");
+            $.getJSON("/goods/findSuper",{},function(data){
+                $.each(data,function(index,goodType){
+                    var op = $("<option>",{
+                        "text":goodType.typeName,
+                        "value":goodType.typeId,
+                    });
+                    superType.append(op);
+                });
+
+            });
+            $("#superId").change(function(){
+                var typeId = $("#typeId");
+                if(suId == 0){
+                    typeId.empty();
+                    return;
+                }
+                $.getJSON("/goods/findChildType",{"superId":suId,},function(data) {
+                    $.each(data, function (index, goodType) {
+                        var op = $("<option>", {
+                            "text": goodType.typeName,
+                            "value": goodType.typeId,
+                        });
+                        typeId.append(op);
+                    });
+                });
+            })
+        });
+    </script>
+
+</head>
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="goodsName" lay-verify="required" placeholder="请输入商品名" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">宠物品种</label>
+        <div class="layui-input-block">
+            <select name="superId" lay-verify="required" id="superId" onchange="getChildType()">
+                <option value="0">请选择宠物品种</option>
+<!--               使用js添加数据-->
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">宠物类别</label>
+        <div class="layui-input-block">
+            <select name="typeId" lay-verify="required" id="typeId">
+                <option value="0">请选择宠物类别</option>
+                <!--               使用js添加数据-->
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单价</label>
+        <div class="layui-input-inline">
+            <input type="text" name="price" lay-verify="email" placeholder="请输入单价" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">总数量</label>
+        <div class="layui-input-inline">
+            <input type="text" name="stock" lay-verify="required" placeholder="请输入总数量" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上架状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-filter="status" name="status" lay-skin="switch" lay-text="上架|待上架">
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-back-submit" value="确认">
+    </div>
+</div>
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var $ = layui.$
+            , form = layui.form;
+
+    //    发送请求获取分类
+
+
+
+
+
+    })
+</script>
+
+
+
+</body>
+</html>

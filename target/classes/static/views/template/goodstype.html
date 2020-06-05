@@ -18,13 +18,13 @@
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">
             <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
-            <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加商品</button>
+            <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
         </div>
 
-        <table id="LAY-goods-list" lay-filter="LAY-goods-list"></table>
+        <table id="LAY-goods-type" lay-filter="LAY-goods-type"></table>
 
 
-        <script type="text/html" id="table-list-handle">
+        <script type="text/html" id="table-type-handle">
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                     class="layui-icon layui-icon-edit"></i>编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
@@ -48,13 +48,42 @@
 
         //事件
         var active = {
-             add: function () {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-user-manage')
+                    , checkData = checkStatus.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.prompt({
+                    formType: 1
+                    , title: '敏感操作，请验证口令'
+                }, function (value, index) {
+                    layer.close(index);
+                    layer.confirm('确定删除吗？', function (index) {
+
+                        console.log("value",value);
+                        console.log("index",index);
+                        //执行 Ajax 后重载
+                        /*
+                        admin.req({
+                          url: 'xxx'
+                          //,……
+                        });
+                        */
+                        table.reload('LAY-user-manage');
+                        layer.msg('已删除');
+                    });
+                });
+            }
+            , add: function () {
                 layer.open({
                     type: 2
-                    , title: '添加商品'
-                    , content: 'addgood.html'
+                    , title: '添加用户'
+                    , content: 'goodslist.html'
                     , maxmin: true
-                    , area: ['600px', '600px']
+                    , area: ['400px', '250px']
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
                         var iframeWindow = window['layui-layer-iframe' + index]
@@ -65,7 +94,7 @@
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            //$.post("/users/addUsers", field);
+                            $.post("/users/addUsers", field);
                             //$.ajax({});
                             table.reload("LAY-user-manage"); //数据刷新
                             layer.close(index); //关闭弹层

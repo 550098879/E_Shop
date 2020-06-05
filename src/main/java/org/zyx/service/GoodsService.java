@@ -1,7 +1,10 @@
 package org.zyx.service;
 
+import org.zyx.VO.GoodsVO;
 import org.zyx.entity.Goods;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface GoodsService extends IService<Goods> {
 
+    List<GoodsVO> findAllGoods(int page,int limit);
 }
