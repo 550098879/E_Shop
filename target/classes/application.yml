@@ -14,9 +14,9 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #  type-enums-package: org.zyx.enums
   global-config:
     db-config:

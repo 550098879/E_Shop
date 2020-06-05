@@ -8,17 +8,21 @@
         cols: [[{type: "checkbox", fixed: "left"},
             {field: "userId", width: 100, title: "ID", sort: !0},
             {field: "loginName", title: "用户名", width: 200}, // templet: "#imgTpl" 加载图片
-            {field: "status", title: "状态" , width: 200},
-            {field: "userRole", title: "职位" , width: 200},
+            {field: "status", title: "状态" , width: 200 ,templet:function(data){
+                    return data.status == 0 ? "在线" : "离线";
+                }},
+            {field: "userRole", title: "职位" , width: 200,templet:function(data){
+                    return data.userRole == 0 ? "普通管理员" : "超级管理员";
+                }},
             {
             title: "操作",
-            width: 250,
+            width: 200,
             align: "center",
             fixed: "right",
             toolbar: "#table-useradmin-webuser"
         }]],
         page: !0,
-        limit: 30,
+        limit: 10,
         height: "full-220",
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-user-manage)", function (e) {
@@ -28,7 +32,7 @@
                 layer.alert("口令错误");
                 return;
             }
-            layer.close(i), layer.confirm("真的删除行么", function (t) {
+            layer.close(i), layer.confirm("确定删除此管理员?", function (t) {
                 var $ = layui.jquery;
                 $.get("/users/deleteById",{"userId": e.data.userId,})
                 e.del(), layer.close(t)
@@ -59,25 +63,24 @@
         }
     }), i.render({
         elem: "#LAY-user-back-manage",
-        url: layui.setter.base + "json/useradmin/mangadmin.js",
-        cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
-            field: "loginname",
-            title: "登录名"
-        }, {field: "telphone", title: "手机"}, {field: "email", title: "邮箱"}, {
-            field: "role",
-            title: "角色"
-        }, {field: "jointime", title: "加入时间", sort: !0}, {
-            field: "check",
-            title: "审核状态",
-            templet: "#buttonTpl",
+        url: "/buyer/findAll",
+        cols: [[{type: "checkbox", fixed: "left"},
+            {field: "buyerId", width: 80, title: "买家ID", sort: !0}, {
+            field: "buyerName",
+            title: "买家昵称"
+        }, {field: "account", title: "账号"}, {field: "balance", title: "余额"}, {
+            field: "payPsw",
+            title: "支付密码"
+        }, {field: "face", title: "头像", sort: !0 ,templet:"#imgTpl"}, {
+            field: "createTime",
+            title: "创建时间",
             minWidth: 80,
-            align: "center"
         }, {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-useradmin-admin"}]],
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-user-back-manage)", function (e) {
         e.data;
         if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
-            layer.close(i), layer.confirm("确定删除此管理员？", function (t) {
+            layer.close(i), layer.confirm("确定删除此用户？", function (t) {
                 console.log(e), e.del(), layer.close(t)
             })
         }); else if ("edit" === e.event) {

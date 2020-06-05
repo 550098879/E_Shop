@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.14</version>
+            <version>1.1.18</version>
         </dependency>
         <!--  mysql驱动    -->
         <dependency>
@@ -48,14 +48,14 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.1.tmp</version>
+            <version>3.1.1</version>
         </dependency>
 
         <!--   mybatis plus 自动生成所需依赖-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.3.1.tmp</version>
+            <version>3.0.7.1</version>
         </dependency>
 
         <!--  mybatis plus自动生成模板-->
