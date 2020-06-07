@@ -43,9 +43,6 @@
     }).use(['index', 'useradmin', 'table'], function () {
         var $ = layui.$
             , table = layui.table;
-
-
-
         //事件
         var active = {
              add: function () {
@@ -58,16 +55,18 @@
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
                         var iframeWindow = window['layui-layer-iframe' + index]
-                            , submitID = 'LAY-user-front-submit'
-                            , submit = layero.find('iframe').contents().find('#' + submitID);
+                            , submitID = 'LAY-good-add-submit'
+                            , submit = layero.find('iframe').contents().find('#' + submitID)
+                        ;
 
                         //监听提交
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            //$.post("/users/addUsers", field);
-                            //$.ajax({});
-                            table.reload("LAY-user-manage"); //数据刷新
+                            $.post("/goods/addGood", field);
+                            console.log(field);
+
+                            table.reload("LAY-goods-list"); //数据刷新
                             layer.close(index); //关闭弹层
                         });
 

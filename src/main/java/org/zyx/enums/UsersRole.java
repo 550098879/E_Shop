@@ -10,8 +10,8 @@ public enum UsersRole {
     COMMON_ADMIN(0,"普通管理员"),
     ;
 
-    private int type;
-    private String msg;
+    int type;
+    String msg;
 
     UsersRole(int type, String msg) {
         this.type = type;

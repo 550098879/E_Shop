@@ -5,37 +5,42 @@ use eshop;
 -- drop table if exists tableName;
 
 -- 1.管理员表:users
-create table users(
-  userId int primary key not null auto_increment, #管理员id
-  login_name varchar(50) not null, #登录账号
-  psw varchar(30) not null ,       #登录密码
-  status int not null, #状态(1启动,2禁用)
-  user_role int not null #角色(1老板,2员工)
+create table users
+(
+    userId     int auto_increment
+        primary key,
+    login_name varchar(50)   not null,
+    psw        varchar(30)   not null,
+    status     int default 0 not null,
+    user_role  int default 0 not null,
 );
 
 -- drop table users
 
 -- 2.商品类型表:goods_type
-create table goods_type(
-  type_id int primary key not null auto_increment, #商品类型id
-  type_name varchar(50),#类型名
-  userId int not null , #商品类型创建人id(管理员id)
-  super_id int          #上级类型id(二级菜单)
+create table goods_type
+(
+    type_id   int auto_increment
+        primary key,
+    type_name varchar(50)   null,
+    userId    int default 1 not null,
+    super_id  int default 0 null
 );
 
 --  drop table goods_type
 
 -- 3.商品表
-create table goods(
-
-  good_id int primary key not null auto_increment, #商品id
-  goods_name varchar(50) not null ,
-  type_id int,                  #所属小分类
-  super_id int not null,        #所属大分类
-  price decimal not null check(price>=0),       #单价
-  stock int check(stock>=0) ,   #商品库存
-  status int not null ,         #是否上架(0:未上架,1:上架)
-  remark varchar(200)           #商品备注
+create table goods
+(
+    good_id    int auto_increment
+        primary key,
+    goods_name varchar(50)   not null,
+    type_id    int           null,
+    super_id   int           not null,
+    price      decimal       not null comment '单价',
+    stock      int           null comment '库存',
+    status     int default 0 not null comment '0:未上架  1:已上架 ',
+    remark     varchar(200)  null comment '备注'
 );
 
 --  drop table goods
@@ -85,7 +90,7 @@ create table address
     address    varchar(100) not null,
     phone      varchar(30)  not null,
     nicheng    varchar(30)  not null,
-    status     int          null comment '状态'
+    status     int          null comment '状态:0:禁用  1:启用'
 );
 
 
