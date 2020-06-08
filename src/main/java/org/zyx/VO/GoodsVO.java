@@ -10,5 +10,5 @@ public class GoodsVO {
     private Goods goods;
     private String typeName;
     private String superName;
-
+    private String cover;//封面
 }

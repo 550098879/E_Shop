@@ -28,22 +28,7 @@
                 });
 
             });
-            // $("#superId").change(function () {
-            //     var typeId = $("#typeId");
-            //     if (suId == 0) {
-            //         typeId.empty();
-            //         return;
-            //     }
-            //     $.getJSON("/goods/findChildType", {"superId": suId,}, function (data) {
-            //         $.each(data, function (index, goodType) {
-            //             var op = $("<option>", {
-            //                 "text": goodType.typeName,
-            //                 "value": goodType.typeId,
-            //             });
-            //             typeId.append(op);
-            //         });
-            //     });
-            // })
+
         }
 
     </script>
@@ -52,6 +37,9 @@
 <body>
 
 <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+
+    <input type="hidden" value="0" name="goodId">
+
     <div class="layui-form-item">
         <label class="layui-form-label">商品名</label>
         <div class="layui-input-inline">
@@ -108,7 +96,7 @@
                    class="layui-input">
         </div>
         <button style="float: left;" type="button" class="layui-btn" id="layuiadmin-upload-cover">上传封面</button>
-        <img id="cover" width="100px" height="100px">
+        <img id="cover" width="150px">
     </div>
 
     <div class="layui-form-item">
@@ -142,19 +130,23 @@
             , done: function (res) {
                 $(this.item).prev("div").children("input").val(res.data.src);
                 $.get(res.data.src, {}, function (data) {
-                    $("#cover").attr("src", data);//将页面实时显示
+                    $("#cover").attr("src", data);//将图片页面实时显示
                 });
             }
         });
 
         //渲染顶级分类
-        form.render('select', 'superId');
 
         //顶级分类下拉框监听
         form.on('select(superId)', function (data) {
-            //var id = data.value;
-            console.log(data);
-            $.get('/goods/findChildType', {"superId": data.value}, function (res) {
+            var id = data.value;
+            if(id == 0){
+                $("#typeId").empty();
+                $("#typeId").append("<option value='0'>请选择宠物类别</option>");
+                form.render('select');//重新渲染下拉框
+                return;
+            }
+            $.get('/goods/findChildType', {"superId": id}, function (res) {
                 console.log(res);
                 //实时渲染子分类
                 $("#typeId").empty();

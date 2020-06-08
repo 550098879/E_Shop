@@ -35,7 +35,7 @@ public class UsersHandler {
         usersMapper.insert(users);
     }
 
-    @GetMapping("/deleteById/")
+    @GetMapping("/deleteById")
     public void deleteById(int userId){
         usersMapper.deleteById(userId);
     }

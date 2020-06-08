@@ -113,25 +113,43 @@ public class GoodsHandler {
 
     @PostMapping("/addGood")
     public void addGood(Goods goods,String cover){
-
-        System.out.println(goods);
-        System.out.println(cover);
         //先添加商品
-        goodsMapper.insert(goods);
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("goods_name",goods.getGoodsName());
-        goods = goodsMapper.selectOne(queryWrapper);
 
-        //添加封面
-        GoodsPic goodsPic = new GoodsPic();
-        goodsPic.setGoodsId(goods.getGoodId());
-        goodsPic.setPicPath(cover);
-        goodsPic.setPicType(GoodPicType.cover.getType());
-        goodsPicMapper.insert(goodsPic);
+        if(goods.getGoodId() == 0){
+            goods.setGoodId(null);
+            goodsMapper.insert(goods);
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("goods_name",goods.getGoodsName());
+            goods = goodsMapper.selectOne(queryWrapper);
+            //添加封面
+            GoodsPic goodsPic = new GoodsPic();
+            goodsPic.setGoodsId(goods.getGoodId());
+            goodsPic.setPicPath(cover);
+            goodsPic.setPicType(GoodPicType.cover.getType());
+            goodsPicMapper.insert(goodsPic);
+        }else{
+            goodsMapper.updateById(goods);
+        }
 
     }
 
+    @GetMapping("/deleteById")
+    public void  deleteById(int goodId){
+        //存储桶移除图片
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("pic_type", GoodPicType.cover.getType());//查找封面图
+        wrapper.eq("goods_id",goodId);
+        String picPath = goodsPicMapper.selectOne(wrapper).getPicPath();
+        String key = picPath.substring(picPath.lastIndexOf('/'));
+        cloud.deleteObjectRequest(key);
+        goodsMapper.deleteById(goodId);//数据库移除商品
+    }
 
-
+    @PostMapping("/updateById/{Id}")
+    public void updateById(@PathVariable("Id") int Id,Goods goods){
+        goods.setGoodId(Id);
+        System.out.println(goods);
+        goodsMapper.updateById(goods);
+    }
 
 }
