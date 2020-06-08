@@ -2,13 +2,12 @@ package org.zyx.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.zyx.VO.DataVO;
 import org.zyx.VO.GoodsVO;
-import org.zyx.VO.PicVO;
+import org.zyx.VO.MapVO;
 import org.zyx.VO.TypeVO;
 import org.zyx.entity.Goods;
 import org.zyx.entity.GoodsPic;
@@ -22,8 +21,9 @@ import org.zyx.utils.ConnectTencentCloud;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class GoodsHandler {
     }
 
     @PostMapping("/upload")
-    public PicVO upload(MultipartFile file, HttpServletRequest request) throws IOException {
+    public MapVO upload(MultipartFile file, HttpServletRequest request) throws IOException {
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile multipartFile= multipartRequest.getFile("file");
@@ -94,7 +94,7 @@ public class GoodsHandler {
         //图片上传云服务
         cloud.uploadStream(inputStream,fileKey,multipartFile.getSize());
 
-        PicVO picVO = new PicVO();
+        MapVO picVO = new MapVO();
         picVO.setCode(0);
         picVO.setMsg("图片");
         Map map = new HashMap();
@@ -105,9 +105,33 @@ public class GoodsHandler {
 
     //将图片请求重定向到服务器的访问路径
     @GetMapping("/img/{fileKey}")
-    public String getImage (@PathVariable("fileKey") String fileKey){
+    public String getImage (@PathVariable("fileKey") String fileKey, HttpServletResponse response) throws MalformedURLException {
         String url = cloud.getUrl(fileKey);
         return url;
+        //通过流的方式将图片显示到前端,优点麻烦,且有所延迟
+//        URL fileUrl = new URL(url);
+//        BufferedInputStream fis = null;
+//        OutputStream os = null;
+//        try {
+//            fis =  new BufferedInputStream(fileUrl.openStream());
+//            os = response.getOutputStream();
+//            int count = 0;
+//            byte[] buffer = new byte[1024 * 8];
+//            while ((count = fis.read(buffer)) != -1) {
+//                os.write(buffer, 0, count);
+//                os.flush();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                fis.close();
+//                os.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
     }
 
 

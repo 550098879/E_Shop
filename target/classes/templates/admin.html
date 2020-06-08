@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <title>E-Shop 后台管理</title>
@@ -29,7 +27,7 @@
             </a>
           </li>
           <li class="layui-nav-item layui-hide-xs" lay-unselect>
-            <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+            <a href="/" target="_blank" title="前台">
               <i class="layui-icon layui-icon-website"></i>
             </a>
           </li>
@@ -69,7 +67,7 @@
           </li>
           <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;">
-              <cite>E-Shop</cite>
+              <cite th:text="${session.admin.loginName}"></cite>
             </a>
             <dl class="layui-nav-child">
               <dd><a lay-href="views/set/user/info.html">基本资料</a></dd>

@@ -57,7 +57,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             String picPath = goodsPicMapper.selectOne(wrapper).getPicPath();
             String key = picPath.substring(picPath.lastIndexOf('/'));
             goodsVO.setCover(cloud.getUrl(key));
-
             goodsVOList.add(goodsVO);
         }
 

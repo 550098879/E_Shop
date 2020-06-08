@@ -8,8 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zyx.VO.DataVO;
+import org.zyx.VO.MapVO;
 import org.zyx.entity.Users;
 import org.zyx.mapper.UsersMapper;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -61,5 +69,45 @@ public class UsersHandler {
         dataVO.setData(usersMapper.selectList(wrapper));
         return dataVO;
     }
+    
+    @PostMapping("/login")
+    public MapVO login(Users users, HttpSession session){
+        MapVO login = new MapVO();
+
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("login_name",users.getLoginName());
+        queryWrapper.eq("psw",users.getPsw());
+        Users admin = usersMapper.selectOne(queryWrapper);
+
+        System.out.println(admin);
+
+        if(admin != null){
+            login.setCode(0);
+            login.setMsg("登陆成功");
+            Map map = new HashMap<>();
+            map.put("access_token",UUID.randomUUID());
+            login.setData(map);
+            session.setAttribute("admin",admin);//将admin设置到session中
+
+        }else{
+            login.setCode(300);
+            login.setMsg("登陆失败");
+        }
+
+
+        return login;
+    }
+
+    @GetMapping("/logout")
+    public MapVO logout(HttpSession session){
+        session.removeAttribute("admin");
+
+        MapVO logout = new MapVO();
+        logout.setCode(0);
+        logout.setMsg("退出成功");
+        logout.setData(null);
+        return logout;
+    }
+    
 
 }
