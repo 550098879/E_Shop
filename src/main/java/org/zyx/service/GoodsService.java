@@ -17,4 +17,5 @@ import java.util.List;
 public interface GoodsService extends IService<Goods> {
 
     List<GoodsVO> findAllGoods(int page,int limit);
+    List<GoodsVO> findDogGoods();
 }

@@ -41,8 +41,31 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public List<GoodsVO> findAllGoods(int page,int limit) {
 
-        List<GoodsVO> goodsVOList = new ArrayList<>();
         List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), null).getRecords();
+
+        return getGoodsVOList(goodsList);
+    }
+
+    @Override
+    public List<GoodsVO> findDogGoods() {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type_id",30);
+        List<Goods> list = goodsMapper.selectList(queryWrapper);
+        List<Goods> goodsList = null;
+        if(list.size() > 4){
+            goodsList = list.subList(0,4);
+        }else{
+            goodsList = list;
+        }
+
+        return getGoodsVOList(goodsList);
+    }
+
+
+
+
+    public  List<GoodsVO> getGoodsVOList(List<Goods> goodsList){
+        List<GoodsVO> goodsVOList = new ArrayList<>();
         for(Goods good : goodsList){
             GoodsVO goodsVO = new GoodsVO();
             goodsVO.setGoods(good);
@@ -59,7 +82,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             goodsVO.setCover(cloud.getUrl(key));
             goodsVOList.add(goodsVO);
         }
-
         return goodsVOList;
     }
+
+
 }

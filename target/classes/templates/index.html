@@ -90,8 +90,8 @@
 
         </div>
         <!-- 菜单 -->
-        <div class="menu-content" id="menu-content">
-            <div class="menu-item" th:each="allType : ${allTypeList}">
+        <div class="menu-content" id="menu-content" style="overflow:auto;">
+            <div class="menu-item"  th:each="allType : ${allTypeList}">
                 <a href="">
                     <span th:text="${allType.superType.typeName}"></span>
                     <i class="icon">&#xe665;</i>
@@ -128,81 +128,37 @@
     <div class="floors">
         <div class="sk">
             <div class="sk_inner w1200">
-                <div class="sk_hd">
+                <div class="sk_hd" style="overflow: hidden;">
                     <a href="javascript:;">
-                        <img src="../layui/static/img/s_img1.jpg">
+                        <img src="/img/狗粮.jpg" width="300" height="300" style="margin-left:-40px;">
                     </a>
                 </div>
                 <div class="sk_bd">
                     <div class="layui-carousel" id="test1">
                         <div carousel-item>
                             <div class="item-box">
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img2.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
+
+                                <div class="item" th:each="dogfood : ${dogGoods}">
+                                    <a href="javascript:;"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
+                                        <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
+                                        <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
                                     </div>
+                                    <div class="title" style="margin-top:-5px;" th:text="${dogfood.goods.goodsName}"></div>
                                 </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img3.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img4.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img5.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="item-box">
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img2.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
+
+                                <div class="item" th:each="dogfood : ${dogGoods}">
+                                    <a href="javascript:;"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
+                                        <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
+                                        <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
                                     </div>
+                                    <div class="title" style="margin-top:-5px;" th:text="${dogfood.goods.goodsName}"></div>
                                 </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img3.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img4.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <a href="javascript:;"><img src="../layui/static/img/s_img5.jpg"></a>
-                                    <div class="title">宝宝五彩袜棉质舒服</div>
-                                    <div class="price">
-                                        <span>￥49.00</span>
-                                        <del>￥99.00</del>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
