@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.zyx.entity.Users;
+import org.zyx.service.GoodsTypeService;
 import org.zyx.service.UsersService;
 
 import javax.servlet.http.HttpSession;
@@ -14,9 +15,18 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/")
 public class PageSkipHandler {
 
+    @Autowired
+    private GoodsTypeService goodsTypeService;
+
+
     @GetMapping("/")
-    public String index(){
-        return "index";
+    public ModelAndView index(ModelAndView modelAndView){
+        modelAndView.addObject("allTypeList",goodsTypeService.getAllType());
+
+
+
+        modelAndView.setViewName("index");
+        return modelAndView;
     }
     @GetMapping("/about")
     public String about(){

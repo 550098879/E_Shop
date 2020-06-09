@@ -1,7 +1,10 @@
 package org.zyx.service;
 
+import org.zyx.VO.AllTypeVO;
 import org.zyx.entity.GoodsType;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-06-03
  */
 public interface GoodsTypeService extends IService<GoodsType> {
+
+    List<AllTypeVO> getAllType();
+
 
 }
