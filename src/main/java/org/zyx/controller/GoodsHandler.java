@@ -1,6 +1,7 @@
 package org.zyx.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,14 +58,25 @@ public class GoodsHandler {
     }
 
     @GetMapping("/findAllGood")
-    public DataVO<GoodsVO> findAllGood(int page, int limit){
+    public DataVO<GoodsVO> findAllGood(int page, int limit,
+                                       @RequestParam(name = "type_id" ,required = false ,defaultValue = "-1") int type_id){
         DataVO<GoodsVO> dataVO = new DataVO();
         dataVO.setCode(0); //返回的code为0,成功
-        dataVO.setCount(goodsService.count());
-        dataVO.setMsg("商品类型数据");
+
+        dataVO.setMsg("商品数据");
         //分页查询
-        List<GoodsVO> allGoods = goodsService.findAllGoods(page, limit);
-        dataVO.setData(allGoods);
+        if(type_id == -1){
+            List<GoodsVO> allGoods = goodsService.findAllGoods(page, limit);
+            dataVO.setCount(goodsService.count());
+            dataVO.setData(allGoods);
+        }else{
+            QueryWrapper<Goods> wrapper = new QueryWrapper<>();
+            wrapper.eq("type_id",type_id);
+            dataVO.setCount(goodsMapper.selectCount(wrapper));
+            List<GoodsVO> allGoods = goodsService.findByTypeId(type_id,page,limit);
+            dataVO.setData(allGoods);
+        }
+
         return dataVO;
     }
 

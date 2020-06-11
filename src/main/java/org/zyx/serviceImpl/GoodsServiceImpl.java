@@ -47,7 +47,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public List<GoodsVO> findDogGoods() {
+    public List<GoodsVO> findDogFoods() {
         QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type_id",30);
         List<Goods> list = goodsMapper.selectList(queryWrapper);
@@ -57,13 +57,38 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         }else{
             goodsList = list;
         }
+        return getGoodsVOList(goodsList);
+    }
+
+    @Override
+    public List<GoodsVO> findCatFoods() {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type_id",31);
+        List<Goods> list = goodsMapper.selectList(queryWrapper);
+        List<Goods> goodsList = null;
+        if(list.size() > 4){
+            goodsList = list.subList(0,4);
+        }else{
+            goodsList = list;
+        }
+        return getGoodsVOList(goodsList);
+    }
+
+    @Override
+    public List<GoodsVO> findByTypeId(int type_id,int page, int limit) {
+
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type_id",type_id);
+        List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
 
         return getGoodsVOList(goodsList);
     }
 
-
-
-
+    /**
+     * 将商品列表转化为GoodVO
+     * @param goodsList 商品list
+     * @return GoodVoList
+     */
     public  List<GoodsVO> getGoodsVOList(List<Goods> goodsList){
         List<GoodsVO> goodsVOList = new ArrayList<>();
         for(Goods good : goodsList){

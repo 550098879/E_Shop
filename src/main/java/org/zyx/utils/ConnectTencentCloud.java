@@ -41,7 +41,7 @@ public class ConnectTencentCloud {
         //1.初始化用户身份信息
         COSCredentials cred = new BasicCOSCredentials(SecretId,SecretKey);
         //2.设置bucket的区域,COS地域的简称参考
-        Region region = new Region(apCity);//此处为枚举类对象
+        Region region = new Region(apCity);
         //3.ClientConfig中包含了设置region,https(默认http),超时,代理等set方法
         ClientConfig clientConfig = new ClientConfig(region);
         //4.生成cos客户端

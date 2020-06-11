@@ -27,9 +27,8 @@ public class PageSkipHandler {
 
     @GetMapping("/")
     public ModelAndView index(ModelAndView modelAndView){
-
-
-        modelAndView.addObject("dogGoods",goodsService.findDogGoods());
+        modelAndView.addObject("dogGoods",goodsService.findDogFoods());
+        modelAndView.addObject("catGoods",goodsService.findCatFoods());
         modelAndView.addObject("allTypeList",goodsTypeService.getAllType());
         modelAndView.setViewName("index");
         return modelAndView;
@@ -44,8 +43,11 @@ public class PageSkipHandler {
     }
 
     @GetMapping("/commodity")
-    public String commodity(){
-        return "commodity";
+    public ModelAndView commodity(ModelAndView modelAndView){
+
+        modelAndView.addObject("allTypeList",goodsTypeService.getAllType());
+        modelAndView.setViewName("commodity");
+        return modelAndView;
     }
 
     @GetMapping("/details")

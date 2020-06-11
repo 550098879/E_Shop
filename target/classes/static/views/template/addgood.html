@@ -126,7 +126,7 @@
             , url: "/goods/upload"
             , accept: 'images'
             , method: 'post'
-            , acceptMime: 'image/*'
+            , acceptMime: 'jpg/png/gif/jpeg'
             , done: function (res) {
                 $(this.item).prev("div").children("input").val(res.data.src);
                 $.get(res.data.src, {}, function (data) {

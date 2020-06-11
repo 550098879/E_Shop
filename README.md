@@ -5,6 +5,11 @@
 - Thymeleaf会解析LayUI的[[...]]符号,需要将[ [] ]分开
 - LayUI自带jQuery,需要使用$符号时,可以定义 var $ = layui.$; 
 - Druid版本1.1.14 与MyBatisPlus对于时间类型存在兼容问题,需要提高Druid的版本
+- 新增本地的静态资源时,出现无法加载的情况可以考虑ReBuild Project(重构) 
+- 使用layui的同事,想要自己写js代码(使用jQuery),则需要在layui.js之前导入jQuery 
+- js中使用 + 加法运算符出现字符串拼接的现象,需要将字符串使用Number(str)转换为数字
+
+
 
 
 ### SQL 语句

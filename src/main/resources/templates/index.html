@@ -14,17 +14,48 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body id="list-cont">
-<div class="site-nav-bg">
-    <div class="site-nav w1200">
-        <p class="sn-back-home">
-            <i class="layui-icon layui-icon-home"></i>
-            <a href="/">首页</a>
-        </p>
-        <div class="sn-quick-menu">
+
+<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
+    <ul class="layui-nav" style="background:#b49fd0;">
+        <li class="layui-nav-item" style="margin-left:10%;">
+            <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
+        </li>
+
+        <li class="layui-nav-item">
+            <a href="javascript:;">导航</a>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                <dd><a href="">所有商品</a></dd>
+                <dd><a href="">今日新增</a></dd>
+                <dd><a href="">宠物资讯</a></dd>
+                <dd><a href="">关于我们</a></dd>
+            </dl>
+        </li>
+
+        <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
+
+        <li class="layui-nav-item" th:if="${session.buyer != null}"
+            style="float: right;margin-left:5px;">
+            <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:;">修改信息</a></dd>
+                <dd><a href="javascript:;">安全管理</a></dd>
+                <dd><a href="javascript:;">退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"  th:if="${session.buyer != null}"
+            style="float: right;">
+            <a href="">个人中心<span class="layui-badge-dot"></span></a>
+        </li>
+
+        <li class="layui-nav-item" style="float: right;">
+            <a href="/shopcart"><i class="layui-icon layui-icon-cart-simple"></i> 购物车 <span class="layui-badge">2</span></a>
+        </li>
+
+        <li class="layui-nav-item"  th:if="${session.buyer == null}"
+            style="float: right;">
             <div class="login"><a href="/login">登录</a></div>
-            <div class="sp-cart"><a href="/shopcart">购物车</a><span>2</span></div>
-        </div>
-    </div>
+        </li>
+    </ul>
 </div>
 
 
@@ -33,7 +64,7 @@
         <div class="headerCon">
             <h1 class="mallLogo">
                 <a href="#" title="E-Shop 宠物商城">
-                    <img src="/images/logo.png" height="150" width="150"/>
+                    <img src="/images/logo.png" height="130" width="130"/>
                 </a>
             </h1>
             <div class="mallSearch">
@@ -91,7 +122,7 @@
         </div>
         <!-- 菜单 -->
         <div class="menu-content" id="menu-content" style="overflow:auto;">
-            <div class="menu-item"  th:each="allType : ${allTypeList}">
+            <div class="menu-item" th:each="allType : ${allTypeList}">
                 <a href="">
                     <span th:text="${allType.superType.typeName}"></span>
                     <i class="icon">&#xe665;</i>
@@ -122,12 +153,38 @@
     </div>
     <script src="/js/script.js"></script>
 
+    <!--热销推荐-->
+    <div class="hot-recommend-con">
+        <div class="hot-con1 w1200 layui-clear">
+            <div class="item">
+                <h4>热销推荐</h4>
+                <div class="big-img">
+                    <a href="javascript:;"><img src="/img/暖冬服饰.jpg" width="95%"/></a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="top-img">
+                    <a href="javascript:;"><img src="/img/铲屎官的必修课.jpg" width="97%" ></a>
+                </div>
+                <div class="bottom-img">
+                    <a href="javascript:;"><img src="/img/狗粮.jpg" width="30%"></a>
+                    <a  href="javascript:;"><img src="/img/猫粮.jpg" width="30%"></a>
+                    <a  href="javascript:;"><img src="/img/清水的奥义.jpg" width="30%"></a>
+                </div>
+            </div>
+            <div class="item item1 margin0 padding0">
+                <a href="javascript:;"><img src="/img/龙猫.jpg" width="60%"></a>
+                <a href="javascript:;"><img class="btm-img" src="/img/医疗保健.jpg" width="60%"></a>
+            </div>
+        </div>
+    </div>
 
+    <!-- 商品推荐   -->
 
-<!--    -->
     <div class="floors">
         <div class="sk">
             <div class="sk_inner w1200">
+                <h2><img src="/images/gouliang.png" height="50" width="50"/>狗粮</h2>
                 <div class="sk_hd" style="overflow: hidden;">
                     <a href="javascript:;">
                         <img src="/img/狗粮.jpg" width="300" height="300" style="margin-left:-40px;">
@@ -139,12 +196,13 @@
                             <div class="item-box">
 
                                 <div class="item" th:each="dogfood : ${dogGoods}">
-                                    <a href="javascript:;"><img th:src="${dogfood.cover}"></a>
+                                    <a href="/details"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
                                         <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
                                     </div>
-                                    <div class="title" style="margin-top:-5px;" th:text="${dogfood.goods.goodsName}"></div>
+                                    <div class="title" style="margin-top:-5px;"
+                                         th:text="${dogfood.goods.goodsName}"></div>
                                 </div>
 
                             </div>
@@ -156,7 +214,8 @@
                                         <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
                                     </div>
-                                    <div class="title" style="margin-top:-5px;" th:text="${dogfood.goods.goodsName}"></div>
+                                    <div class="title" style="margin-top:-5px;"
+                                         th:text="${dogfood.goods.goodsName}"></div>
                                 </div>
 
                             </div>
@@ -168,29 +227,47 @@
     </div>
 
 
-    <div class="hot-recommend-con">
-        <div class="hot-con1 w1200 layui-clear">
-            <div class="item">
-                <h4>热销推荐</h4>
-                <div class="big-img">
-                    <a href="javascript:;"><img src="../layui/static/img/hot1.png"></a>
+    <div class="floors">
+        <div class="sk">
+            <div class="sk_inner w1200">
+                <h2><img src="/images/maoliang.png" height="50" width="50"/> 猫粮</h2>
+                <div class="sk_hd" style="overflow: hidden;">
+                    <a href="javascript:;">
+                        <img src="/img/猫粮.jpg" width="300" height="300" style="margin-left:-40px;">
+                    </a>
                 </div>
-                <div class="small-img">
-                    <a href="javascript:;"><img src="../layui/static/img/hot2.png" alt=""></a>
+                <div class="sk_bd">
+                    <div class="layui-carousel" id="test2">
+                        <div carousel-item>
+                            <div class="item-box">
+
+                                <div class="item" th:each="catfood : ${catGoods}">
+                                    <a href="/details"><img th:src="${catfood.cover}"></a>
+                                    <div class="price">
+                                        <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
+                                        <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>
+                                    </div>
+                                    <div class="title" style="margin-top:-5px;"
+                                         th:text="${catfood.goods.goodsName}"></div>
+                                </div>
+
+                            </div>
+                            <div class="item-box">
+
+                                <div class="item" th:each="catfood : ${catGoods}">
+                                    <a href="/details"><img th:src="${catfood.cover}"></a>
+                                    <div class="price">
+                                        <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
+                                        <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>
+                                    </div>
+                                    <div class="title" style="margin-top:-5px;"
+                                         th:text="${catfood.goods.goodsName}"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="top-img">
-                    <a href="javascript:;"><img src="../layui/static/img/hot5.jpg"></a>
-                </div>
-                <div class="bottom-img">
-                    <a href="javascript:;"><img src="../layui/static/img/hot6.jpg"></a>
-                    <a class="baby-cream" href="javascript:;"><img src="../layui/static/img/hot7.jpg"></a>
-                </div>
-            </div>
-            <div class="item item1 margin0 padding0">
-                <a href="javascript:;"><img src="../layui/static/img/hot8.jpg"></a>
-                <a href="javascript:;"><img class="btm-img" src="../layui/static/img/hot9.jpg"></a>
             </div>
         </div>
     </div>
@@ -201,7 +278,7 @@
             <div class="left-title">
                 <h4><i>1F</i></h4>
                 <img src="../layui/static/img/icon_gou.png">
-                <h5>宝宝服饰</h5>
+                <h5>宠物信息</h5>
             </div>
             <div class="right-cont">
                 <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
@@ -218,7 +295,7 @@
             <div class="left-title">
                 <h4><i>2F</i></h4>
                 <img src="../layui/static/img/icon_gou.png">
-                <h5>奶粉辅食</h5>
+                <h5>宠物服务</h5>
             </div>
             <div class="right-cont">
                 <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
@@ -235,7 +312,7 @@
             <div class="left-title">
                 <h4><i>3F</i></h4>
                 <img src="../layui/static/img/icon_gou.png">
-                <h5>宝宝用品</h5>
+                <h5>宠物周边</h5>
             </div>
             <div class="right-cont">
                 <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
@@ -250,148 +327,6 @@
         </div>
     </div>
 
-    <div class="product-list-box" id="product-list-box">
-        <div class="product-list-cont w1200">
-            <h4>更多推荐</h4>
-            <div class="product-item-box layui-clear">
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more1.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more2.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-                <div class="list-item">
-                    <a href="javascript:;"><img src="../layui/static/img/more3.jpg"></a>
-                    <p>时尚宝宝小黄鸭T恤纯棉耐脏多色可选0-2岁宝宝</p>
-                    <span>￥100.00</span>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="footer">
@@ -412,11 +347,11 @@
             <span>|</span>
             <a href="javascript:;">售后服务</a>
             <span>|</span>
-            <a href="javascript:;">母婴资讯</a>
+            <a href="javascript:;">宠物商城</a>
             <span>|</span>
             <a href="javascript:;">关于货源</a>
         </p>
-        <p class="coty">母婴商城版权所有 &copy; 2012-2020</p>
+        <p class="coty">E-Shop版权所有 &copy; 2020-2030</p>
     </div>
 </div>
 <script type="text/javascript">
@@ -433,7 +368,15 @@
             , height: '298'
             , indicator: 'none'
         }
+        var option2 = {
+            elem: '#test2'
+            , width: '100%' //设置容器宽度
+            , arrow: 'always'
+            , height: '298'
+            , indicator: 'none'
+        }
         carousel.render(option);
+        carousel.render(option2);
         // 模版引擎导入
         // var ins = carousel.render(option);
         // var html = demo.innerHTML;

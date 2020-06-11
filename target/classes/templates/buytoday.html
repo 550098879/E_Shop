@@ -13,18 +13,38 @@
 </head>
 <body>
 
-  <div class="site-nav-bg">
-    <div class="site-nav w1200">
-      <p class="sn-back-home">
-        <i class="layui-icon layui-icon-home"></i>
-        <a href="/">首页</a>
-      </p>
-      <div class="sn-quick-menu">
-        <div class="login"><a href="/login">登录</a></div>
-        <div class="sp-cart"><a href="/shopcart">购物车</a><span>2</span></div>
-      </div>
-    </div>
-  </div>
+<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
+  <ul class="layui-nav" style="background:#b49fd0;">
+    <li class="layui-nav-item" style="margin-left:10%;">
+      <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
+    </li>
+
+    <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
+
+    <li class="layui-nav-item" th:if="${session.buyer != null}"
+        style="float: right;margin-left:5px;">
+      <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+      <dl class="layui-nav-child">
+        <dd><a href="javascript:;">修改信息</a></dd>
+        <dd><a href="javascript:;">安全管理</a></dd>
+        <dd><a href="javascript:;">退出</a></dd>
+      </dl>
+    </li>
+    <li class="layui-nav-item"  th:if="${session.buyer != null}"
+        style="float: right;">
+      <a href="">个人中心<span class="layui-badge-dot"></span></a>
+    </li>
+
+    <li class="layui-nav-item" style="float: right;">
+      <a href="/shopcart">购物车<span class="layui-badge">2</span></a>
+    </li>
+
+    <li class="layui-nav-item"  th:if="${session.buyer == null}"
+        style="float: right;">
+      <div class="login"><a href="/login">登录</a></div>
+    </li>
+  </ul>
+</div>
 
 
 
@@ -32,8 +52,8 @@
     <div class="headerLayout w1200">
       <div class="headerCon">
         <h1 class="mallLogo">
-          <a href="#" title="母婴商城">
-            <img src="../layui/static/img/logo.png">
+          <a href="/" title="E-Shop 宠物商城">
+            <img src="/images/logo.png" height="130" width="130"/>
           </a>
         </h1>
         <div class="mallSearch">
