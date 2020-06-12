@@ -73,7 +73,9 @@
             title: "买家昵称"
         }, {field: "account", title: "账号"}, {field: "balance", title: "余额"}, {
             field: "payPsw",
-            title: "支付密码"
+            title: "支付密码", templet: function(data){
+                    return data.payPsw == null ? "新用户" : data.payPsw ;
+                }
         }, {field: "face", title: "头像", sort: !0 ,templet:"#imgTpl"}, {
             field: "createTime",
             title: "创建时间",

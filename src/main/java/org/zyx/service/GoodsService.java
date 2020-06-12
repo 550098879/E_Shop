@@ -16,9 +16,35 @@ import java.util.List;
  */
 public interface GoodsService extends IService<Goods> {
 
+    /**
+     * 查找全部商品,需要分页
+     * @param page
+     * @param limit
+     * @return
+     */
     List<GoodsVO> findAllGoods(int page,int limit);
+
+    /**
+     * 查找猫粮狗粮,只取前4条
+     * @return
+     */
     List<GoodsVO> findDogFoods();
     List<GoodsVO> findCatFoods();
+
+    /**
+     * 根据类型id查找该类商品
+     * @param type_id
+     * @param page
+     * @param limit
+     * @return
+     */
     List<GoodsVO> findByTypeId(int type_id,int page,int limit);
+
+    /**
+     * 查询单个商品
+     * @param goodId
+     * @return
+     */
+    GoodsVO findById(int goodId);
 
 }

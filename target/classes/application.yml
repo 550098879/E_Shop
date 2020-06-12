@@ -15,7 +15,7 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-#mybatis-plus:
+#mybatis-plus:    #打印SQL语句
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #  type-enums-package: org.zyx.enums

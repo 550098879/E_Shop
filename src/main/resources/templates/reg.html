@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Shop 注册中心 </title>
+    <script src="/js/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../layui/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../layui/layui/css/layui.css">
+    <script type="text/javascript" src="../layui/layui/layui.js"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <link rel="icon" href="../images/chongwu.png" type="image/x-icon"/>
+</head>
+<body>
+
+<!--顶部导航栏-->
+<div th:include="navigation :: nav"></div>
+
+
+<div class="header">
+    <div class="headerLayout w1200">
+        <div class="headerCon">
+            <h1 class="mallLogo">
+                <a href="/" title="E-Shop 宠物商城">
+                    <img src="/images/logo.png" height="130" width="130"/>
+                </a>
+            </h1>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="content content-nav-base  login-content">
+    <div class="main-nav">
+        <div class="inner-cont0">
+            <div class="inner-cont1 w1200">
+                <div class="inner-cont2">
+                    <a href="/commodity" class="active">所有商品</a>
+                    <a href="/buytoday">今日新增</a>
+                    <a href="/about">关于我们</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-bg">
+        <div class="login-cont w1200">
+            <div class="form-box" style="margin-top: -100px;margin-right: 30%;height: 600px;">
+                <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+<!--                    action="/buyer/reg" method="post"-->
+                    <legend>自定义注册</legend>
+                    <!--    表单主体       -->
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="buyerName" required lay-verify="required" placeholder="请输入用户名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">账户</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="account" name="account" required lay-verify="required" placeholder="(以字母开头,5到16位)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="psw" required lay-verify="required" placeholder="请输入密码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">确认密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="psw2" required lay-verify="required" placeholder="确认密码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-row">
+                            <div class="layui-col-xs7">
+                                <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required"
+                                       placeholder="验证码" class="layui-input">
+                            </div>
+                            <div class="layui-col-xs5">
+                                <div style="margin-left: 10px;">
+                                    <canvas id="canvas" width="100" height="45"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script src="/js/AuthCode.js"></script>  <!--验证码-->
+
+                    <div class="layui-form-item login-btn">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit" >注册
+                            </button>
+                        </div>
+                    </div>
+
+                    <a href="#" style="color: #01AAED;margin-left: 50px;">
+                        <i class="layui-icon layui-icon-release"></i>邮箱注册</a>
+                    <a href="#" style="color: #01AAED;margin-left: 50px">
+                        <i class="layui-icon layui-icon-cellphone"></i>手机号注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--顶部导航栏-->
+<div th:include="footer :: footer"></div>
+
+
+<script type="text/javascript">
+
+    layui.config({
+        base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['mm','form'],function(){
+        var  mm = layui.mm;
+        var form = layui.form;
+        //监听提交
+        form.on('submit(lay-buyer-submit)', function(data){
+            // layer.msg(JSON.stringify(data.field));
+            console.log(data.field);
+            var code = show_num.join("").toLowerCase();
+            var inputCode = data.field.vercode.toLowerCase();
+            if(!/^[a-zA-Z][a-zA-Z0-9_]{4,15}$/.test($("#account").val())){
+                layer.alert("账户格式错误,请重试");
+                return false;
+            }else if (inputCode != code) {
+                layer.alert("验证码错误");
+                draw(show_num);
+                return false;
+            }else if(data.field.psw != data.field.psw2){
+                layer.alert("两次输入的密码不一致");
+                return false;
+            }
+
+            $.post("/buyer/reg",data.field,function(response){
+
+                console.log(response);
+                // 根据返回的数据判断是否注册成功
+                // ACCOUNT_EXIST(0,"账户已存在"),
+                // REG_FAILED(1,"注册失败"),
+                // REG_SUCCEED(2,"注册成功"),
+                if(response == 0){
+                    layer.alert("账户已存在");
+                }
+                if(response == 1){
+                    layer.alert("注册失败");
+                }
+                if(response == 2){
+                    layer.confirm("注册成功,前往登录",function(t){
+                        window.localStorage.setItem("index","index");
+                        location.href = "/login";
+                        layer.close(t);
+                    });
+                }
+
+            });
+
+
+
+        });
+    });
+
+    //验证
+
+
+
+</script>
+
+</body>
+</html>

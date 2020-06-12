@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.zyx.VO.DataVO;
 import org.zyx.VO.GoodsVO;
 import org.zyx.VO.MapVO;
@@ -42,7 +43,6 @@ public class GoodsHandler {
     private GoodsTypeMapper goodsTypeMapper;
     @Autowired
     private GoodsService goodsService;
-
     @Autowired
     private ConnectTencentCloud cloud;
 
@@ -120,7 +120,7 @@ public class GoodsHandler {
     public String getImage (@PathVariable("fileKey") String fileKey, HttpServletResponse response) throws MalformedURLException {
         String url = cloud.getUrl(fileKey);
         return url;
-        //通过流的方式将图片显示到前端,优点麻烦,且有所延迟
+        //通过流的方式将图片显示到前端,有点麻烦,且有所延迟
 //        URL fileUrl = new URL(url);
 //        BufferedInputStream fis = null;
 //        OutputStream os = null;
@@ -187,5 +187,19 @@ public class GoodsHandler {
         System.out.println(goods);
         goodsMapper.updateById(goods);
     }
+
+    @GetMapping("/findById/{goodId}")
+    public ModelAndView findById(@PathVariable("goodId") int goodId,ModelAndView modelAndView){
+        GoodsVO goodsVO = goodsService.findById(goodId);
+        int typeId = goodsVO.getGoods().getTypeId();
+
+        List<GoodsVO> likeGoods = goodsService.findByTypeId(typeId, 1, 3);
+        likeGoods.remove(goodsVO);//移除当前商品
+        modelAndView.addObject("good",goodsVO);
+        modelAndView.addObject("likeGoods",likeGoods);
+        modelAndView.setViewName("details");
+        return modelAndView;
+    }
+
 
 }

@@ -4,47 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <title>E-Shop宠物商城</title>
-  <link rel="stylesheet" type="text/css" href="../layui/static/css/main.css">
-  <link rel="stylesheet" type="text/css" href="../layui/layui/css/layui.css">
-  <script type="text/javascript" src="../layui/layui/layui.js"></script>
+  <link rel="stylesheet" type="text/css" href="/layui/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/layui/layui/css/layui.css">
+  <script type="text/javascript" src="/layui/layui/layui.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <link rel="icon" href="../images/chongwu.png" type="image/x-icon"/>
+  <link rel="icon" href="/images/chongwu.png" type="image/x-icon"/>
 </head>
 <body>
 
-<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
-  <ul class="layui-nav" style="background:#b49fd0;">
-    <li class="layui-nav-item" style="margin-left:10%;">
-      <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
-    </li>
-
-    <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
-
-    <li class="layui-nav-item" th:if="${session.buyer != null}"
-        style="float: right;margin-left:5px;">
-      <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-      <dl class="layui-nav-child">
-        <dd><a href="javascript:;">修改信息</a></dd>
-        <dd><a href="javascript:;">安全管理</a></dd>
-        <dd><a href="javascript:;">退出</a></dd>
-      </dl>
-    </li>
-    <li class="layui-nav-item"  th:if="${session.buyer != null}"
-        style="float: right;">
-      <a href="">个人中心<span class="layui-badge-dot"></span></a>
-    </li>
-
-    <li class="layui-nav-item" style="float: right;">
-      <a href="/shopcart">购物车<span class="layui-badge">2</span></a>
-    </li>
-
-    <li class="layui-nav-item"  th:if="${session.buyer == null}"
-        style="float: right;">
-      <div class="login"><a href="/login">登录</a></div>
-    </li>
-  </ul>
-</div>
+<!--顶部导航栏-->
+<div th:include="navigation :: nav"></div>
 
 
   <div class="header">
@@ -76,7 +46,6 @@
           <div class="inner-cont2">
             <a href="/commodity" class="active">所有商品</a>
             <a href="/buytoday">今日团购</a>
-            <a href="/information">母婴资讯</a>
             <a href="/about">关于我们</a>
           </div>
         </div>
@@ -84,80 +53,72 @@
     </div>
     <div class="data-cont-wrap w1200">
       <div class="crumb">
-        <a href="javascript:;">首页</a>
+        <a href="/">首页</a>
         <span>></span>
-        <a href="javascript:;">所有商品</a>
+        <a href="/commodity">所有商品</a>
         <span>></span>
         <a href="javascript:;">产品详情</a>
       </div>
       <div class="product-intro layui-clear">
         <div class="preview-wrap">
-          <a href="javascript:;"><img src="../layui/static/img/details_img1.jpg"></a>
+          <a href="javascript:;"><img th:src="${good.cover}" width="90%"></a>
         </div>
         <div class="itemInfo-wrap">
           <div class="itemInfo">
             <div class="title">
-              <h4>男女宝宝秋冬装套装0一1岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣 </h4>
+              <h4 th:text="${good.goods.goodsName}"></h4>
               <span><i class="layui-icon layui-icon-rate-solid"></i>收藏</span>
             </div>
             <div class="summary">
-              <p class="reference"><span>参考价</span> <del>￥280.00</del></p>
-              <p class="activity"><span>活动价</span><strong class="price"><i>￥</i>99.00</strong></p>
+              <p class="reference"><span>参考价</span> <del th:text="'￥'+${good.goods.price+50}"></del></p>
+              <p class="activity"><span>活动价</span><i>￥</i><strong class="price" th:text="${good.goods.price}"></strong></p>
               <p class="address-box"><span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span><strong class="address">江西&nbsp;&nbsp;南昌&nbsp;&nbsp;东湖区</strong></p>
             </div>
             <div class="choose-attrs">
-              <div class="color layui-clear"><span class="title">颜&nbsp;&nbsp;&nbsp;&nbsp;色</span> <div class="color-cont"><span class="btn">白色</span> <span class="btn active">粉丝</span></div></div>
-              <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span><div class="number-cont"><span class="cut btn">-</span><input onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" maxlength="4" type="" name="" value="1"><span class="add btn">+</span></div></div>
+              <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span><div class="number-cont"><span class="cut btn">-</span>
+                <input onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                       maxlength="4" type="" name="" value="1"><span class="add btn">+</span></div></div>
             </div>
             <div class="choose-btns">
-              <button class="layui-btn layui-btn-primary purchase-btn">立刻购买</button>
-              <button class="layui-btn  layui-btn-danger car-btn"><i class="layui-icon layui-icon-cart-simple"></i>加入购物车</button>  
+              <button th:onclick="'shop('+${good.goods.goodId}+')'" th:if="${session.buyer != null}"
+                      class="layui-btn layui-btn-primary purchase-btn">立刻购买</button>
+              <a href="/login"  th:if="${session.buyer == null}"
+                      class="layui-btn layui-btn-primary purchase-btn">登录购买</a>
+              <button th:onclick="'addCart('+${good.goods.goodId}+')'" class="layui-btn  layui-btn-danger car-btn"><i class="layui-icon layui-icon-cart-simple"></i>加入购物车</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="layui-clear">
-        <div class="aside">
+      <div class="layui-clear" >
+        <div class="aside" style="width: 30%">
           <h4>热销推荐</h4>
           <div class="item-list">
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
+            <div class="item" th:each="likegood : ${likeGoods}" >
+              <a th:href="'/goods/findById/'+${likegood.goods.goodId}">
+                <img th:src="${likegood.cover}" width="100%">
+              </a>
+              <p><span th:text="${likegood.goods.goodsName}"></span>
+                <span th:text="'￥'+${likegood.goods.price}" class="pric"></span></p>
             </div>
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
-            </div>
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
-            </div>
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
-            </div>
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
-            </div>
-            <div class="item">
-              <img src="../layui/static/img/details_img2.jpg">
-              <p><span>可爱宝宝粉色连体秋裤</span><span class="pric">￥99.00</span></p>
-            </div>
+
           </div>
         </div>
-        <div class="detail">
+        <div class="detail" style="float: right;display: inline-block;width: 60%">
           <h4>详情</h4>
-          <div class="item">
-            <img src="../layui/static/img/details_imgbig.jpg">
+          <div class="item"  th:text="${good.goods.remark}">
+
           </div>
         </div>
       </div>
     </div>
   </div>
+<!--底部声明栏-->
+<div th:include="footer :: footer"></div>
+
 <script type="text/javascript">
   layui.config({
-    base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+    base: '/layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
   }).use(['mm','jquery'],function(){
       var mm = layui.mm,$ = layui.$;
       var cur = $('.number-cont input').val();
@@ -174,6 +135,25 @@
       })
       
   });
+
+
+  //直接购买
+  function shop(goodId){
+
+
+
+  }
+
+  //添加购物车
+  function addCart(goodId){
+
+
+  }
+
+
+
+
+
 </script>
 
 

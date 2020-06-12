@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+
+<body>
+    <!--顶部导航栏-->
+        <div class="site-nav-bg" style="width: 100%; margin: 20px 0" th:fragment="nav">
+            <ul class="layui-nav" style="background:#b49fd0;">
+                <li class="layui-nav-item" style="margin-left:10%;">
+                    <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
+                </li>
+
+                <li class="layui-nav-item">
+                    <a href="javascript:;">导航</a>
+                    <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                        <dd><a href="">所有商品</a></dd>
+                        <dd><a href="">今日新增</a></dd>
+                        <dd><a href="">关于我们</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
+
+                <li class="layui-nav-item" th:if="${session.buyer != null}"
+                    style="float: right;margin-left:5px;">
+                    <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/information">个人中心</a></dd>
+                        <dd><a href="/information">安全管理</a></dd>
+                        <dd><a href="/buyer/logout">退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"  th:if="${session.buyer != null}"
+                    style="float: right;">
+
+                </li>
+
+                <li class="layui-nav-item" style="float: right;">
+                    <a href="/shopcart"><i class="layui-icon layui-icon-cart-simple"></i> 购物车 <span class="layui-badge">2</span></a>
+                </li>
+
+                <li class="layui-nav-item"  th:if="${session.buyer == null}"
+                    style="float: right;">
+                    <div class="login"><a href="/login">登录</a></div>
+                </li>
+            </ul>
+        </div>
+
+</body>
+</html>

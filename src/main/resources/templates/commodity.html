@@ -15,38 +15,8 @@
 </head>
 <body>
 
-<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
-    <ul class="layui-nav" style="background:#b49fd0;">
-        <li class="layui-nav-item" style="margin-left:10%;">
-            <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
-        </li>
-
-        <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
-
-        <li class="layui-nav-item" th:if="${session.buyer != null}"
-            style="float: right;margin-left:5px;">
-            <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-            <dl class="layui-nav-child">
-                <dd><a href="javascript:;">修改信息</a></dd>
-                <dd><a href="javascript:;">安全管理</a></dd>
-                <dd><a href="javascript:;">退出</a></dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item" th:if="${session.buyer != null}"
-            style="float: right;">
-            <a href="">个人中心<span class="layui-badge-dot"></span></a>
-        </li>
-
-        <li class="layui-nav-item" style="float: right;">
-            <a href="/shopcart">购物车<span class="layui-badge">2</span></a>
-        </li>
-
-        <li class="layui-nav-item" th:if="${session.buyer == null}"
-            style="float: right;">
-            <div class="login"><a href="/login">登录</a></div>
-        </li>
-    </ul>
-</div>
+<!--顶部导航栏-->
+<div th:include="navigation :: nav"></div>
 
 
 <div class="header">
@@ -79,7 +49,6 @@
                 <div class="inner-cont2">
                     <a href="/commodity" class="active">所有商品</a>
                     <a href="/buytoday">今日团购</a>
-                    <a href="/information">母婴资讯</a>
                     <a href="/about">关于我们</a>
                 </div>
             </div>
@@ -134,12 +103,19 @@
     </div>
 </div>
 
+<!--底部声明栏-->
+<div th:include="footer :: footer"></div>
+
 <!--自己写的ajax请求-->
 <script>
     let type_id = -1;
     let pageCounts = 1;
 
-    getByType(-1);//初始化,查询全部
+    if(window.localStorage.getItem("typeId") != null){
+        type_id = window.localStorage.getItem("typeId");
+        window.localStorage.removeItem("typeId");
+    }
+    getByType(type_id);//初始化,查询全部
 
     function getByType(typeid,page){
         if(typeid != null){
@@ -148,7 +124,7 @@
         if(page == null){
             page = 1;
         }
-        $.get("/goods/findAllGood",{"type_id":type_id,"page":page,"limit":2,},function(response){
+        $.get("/goods/findAllGood",{"type_id":type_id,"page":page,"limit":9,},function(response){
 
             $("#list-cont").empty();//清空内容区
 
@@ -156,7 +132,7 @@
             console.log(response);
             //设置页面属性,分页属性
             $("#count").text(response.count);
-            pageCounts = Math.ceil(response.count/2);
+            pageCounts = Math.ceil(response.count/12);
             $("#pageCount").text(pageCounts);
             if(pageCounts == 0){
                 $("#list-cont").append("<h2 align='center'>暂无该分类的商品!(￣o￣) . z Z　</h2><hr>");
@@ -165,14 +141,14 @@
             $.each(goodList,function(index,good){
                 let item = $("<div>",{
                     "class":"item",
-                    "height":"250",
+                    "height":"270",
                     "width":"260",
                 });
                 let imgDiv = $("<div>",{
                     "class":"img",
                 });
-                imgDiv.append("<a href='/goods/findById/"+good.goods.goodId+"'>" +
-                    "<img width='80%' style='margin:5% 10%;' align='center' src="+good.cover+"></a>");
+                imgDiv.append("<a href='/goods/findById/"+good.goods.goodId+"' >" +
+                    "<img width='80%' height='165.5' style='margin:5% 10%;' align='center' src="+good.cover+"></a>");
                 let text = $("<div>",{
                     "class":"text",
                 });

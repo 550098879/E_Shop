@@ -13,6 +13,7 @@ import org.zyx.service.GoodsService;
 import org.zyx.service.GoodsTypeService;
 import org.zyx.service.UsersService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -51,8 +52,12 @@ public class PageSkipHandler {
     }
 
     @GetMapping("/details")
-    public String details(){
-        return "details";
+    public ModelAndView details(HttpServletRequest request,ModelAndView modelAndView){
+        if(request.getAttribute("good") == null){
+            return commodity(modelAndView);
+        }
+        modelAndView.setViewName("details");
+        return modelAndView;
     }
 
     @GetMapping("/information")
@@ -65,10 +70,18 @@ public class PageSkipHandler {
         return "login";
     }
 
+    @GetMapping("/reg")
+    public String reg(){
+        return "reg";
+    }
+
+
     @GetMapping("/shopcart")
-    public String shopcart(){
+    public String shopCart(){
         return "shopcart";
     }
+
+
 
     @GetMapping("/admin")
     public String admin(HttpSession session){

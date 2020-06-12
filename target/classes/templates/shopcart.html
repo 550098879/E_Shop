@@ -13,38 +13,8 @@
 </head>
 <body>
 
-<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
-  <ul class="layui-nav" style="background:#b49fd0;">
-    <li class="layui-nav-item" style="margin-left:10%;">
-      <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
-    </li>
-
-    <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
-
-    <li class="layui-nav-item" th:if="${session.buyer != null}"
-        style="float: right;margin-left:5px;">
-      <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-      <dl class="layui-nav-child">
-        <dd><a href="javascript:;">修改信息</a></dd>
-        <dd><a href="javascript:;">安全管理</a></dd>
-        <dd><a href="javascript:;">退出</a></dd>
-      </dl>
-    </li>
-    <li class="layui-nav-item"  th:if="${session.buyer != null}"
-        style="float: right;">
-      <a href="">个人中心<span class="layui-badge-dot"></span></a>
-    </li>
-
-    <li class="layui-nav-item" style="float: right;">
-      <a href="/shopcart">购物车<span class="layui-badge">2</span></a>
-    </li>
-
-    <li class="layui-nav-item"  th:if="${session.buyer == null}"
-        style="float: right;">
-      <div class="login"><a href="/login">登录</a></div>
-    </li>
-  </ul>
-</div>
+<!--顶部导航栏-->
+<div th:include="navigation :: nav"></div>
 
 
   <div class="header">
@@ -76,7 +46,6 @@
           <div class="inner-cont2">
             <a href="/commodity" class="active">所有商品</a>
             <a href="/buytoday">今日团购</a>
-            <a href="/information">母婴资讯</a>
             <a href="/about">关于我们</a>
           </div>
         </div>
@@ -292,6 +261,10 @@
       </div>
     </div>
   </div>
+
+<!--底部声明栏-->
+<div th:include="footer :: footer"></div>
+
 
 <script type="text/javascript">
   layui.config({

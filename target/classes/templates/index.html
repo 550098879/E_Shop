@@ -15,48 +15,8 @@
 </head>
 <body id="list-cont">
 
-<div class="site-nav-bg" style="width: 100%; margin: 20px 0">
-    <ul class="layui-nav" style="background:#b49fd0;">
-        <li class="layui-nav-item" style="margin-left:10%;">
-            <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
-        </li>
-
-        <li class="layui-nav-item">
-            <a href="javascript:;">导航</a>
-            <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                <dd><a href="">所有商品</a></dd>
-                <dd><a href="">今日新增</a></dd>
-                <dd><a href="">宠物资讯</a></dd>
-                <dd><a href="">关于我们</a></dd>
-            </dl>
-        </li>
-
-        <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
-
-        <li class="layui-nav-item" th:if="${session.buyer != null}"
-            style="float: right;margin-left:5px;">
-            <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-            <dl class="layui-nav-child">
-                <dd><a href="javascript:;">修改信息</a></dd>
-                <dd><a href="javascript:;">安全管理</a></dd>
-                <dd><a href="javascript:;">退出</a></dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item"  th:if="${session.buyer != null}"
-            style="float: right;">
-            <a href="">个人中心<span class="layui-badge-dot"></span></a>
-        </li>
-
-        <li class="layui-nav-item" style="float: right;">
-            <a href="/shopcart"><i class="layui-icon layui-icon-cart-simple"></i> 购物车 <span class="layui-badge">2</span></a>
-        </li>
-
-        <li class="layui-nav-item"  th:if="${session.buyer == null}"
-            style="float: right;">
-            <div class="login"><a href="/login">登录</a></div>
-        </li>
-    </ul>
-</div>
+<!--顶部导航栏-->
+<div th:include="navigation :: nav"></div>
 
 
 <div class="header">
@@ -89,7 +49,6 @@
                 <div class="inner-cont2">
                     <a href="/commodity" class="active">所有商品</a>
                     <a href="/buytoday">今日新增</a>
-                    <a href="/information">宠物资讯</a>
                     <a href="/about">关于我们</a>
                 </div>
             </div>
@@ -109,7 +68,7 @@
                         <span class="bold mr10" th:text="${allType.superType.typeName}"></span>
 
                         <span th:each="childType : ${allType.childTypeList}">
-                                <a href="" th:text="${childType.typeName}"></a>
+                                <a  th:onclick="'findByTypeId('+${childType.typeId}+')'"  th:text="${childType.typeName}"></a>
                                 <span class="ml10 mr10">/</span>
                         </span>
 
@@ -196,7 +155,7 @@
                             <div class="item-box">
 
                                 <div class="item" th:each="dogfood : ${dogGoods}">
-                                    <a href="/details"><img th:src="${dogfood.cover}"></a>
+                                    <a th:href="'/goods/findById/'+${dogfood.goods.goodId}"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
                                         <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
@@ -209,7 +168,7 @@
                             <div class="item-box">
 
                                 <div class="item" th:each="dogfood : ${dogGoods}">
-                                    <a href="javascript:;"><img th:src="${dogfood.cover}"></a>
+                                    <a th:href="'/goods/findById/'+${dogfood.goods.goodId}"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
                                         <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
@@ -272,88 +231,11 @@
         </div>
     </div>
 
-
-    <div class="product-cont w1200" id="product-cont">
-        <div class="product-item product-item1 layui-clear">
-            <div class="left-title">
-                <h4><i>1F</i></h4>
-                <img src="../layui/static/img/icon_gou.png">
-                <h5>宠物信息</h5>
-            </div>
-            <div class="right-cont">
-                <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
-                <div class="img-box">
-                    <a href="javascript:;"><img src="../layui/static/img/s_img7.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img8.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img9.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img10.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img11.jpg"></a>
-                </div>
-            </div>
-        </div>
-        <div class="product-item product-item2 layui-clear">
-            <div class="left-title">
-                <h4><i>2F</i></h4>
-                <img src="../layui/static/img/icon_gou.png">
-                <h5>宠物服务</h5>
-            </div>
-            <div class="right-cont">
-                <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
-                <div class="img-box">
-                    <a href="javascript:;"><img src="../layui/static/img/s_img7.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img8.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img9.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img10.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img11.jpg"></a>
-                </div>
-            </div>
-        </div>
-        <div class="product-item product-item3 layui-clear">
-            <div class="left-title">
-                <h4><i>3F</i></h4>
-                <img src="../layui/static/img/icon_gou.png">
-                <h5>宠物周边</h5>
-            </div>
-            <div class="right-cont">
-                <a href="javascript:;" class="top-img"><img src="../layui/static/img/img12.jpg" alt=""></a>
-                <div class="img-box">
-                    <a href="javascript:;"><img src="../layui/static/img/s_img7.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img8.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img9.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img10.jpg"></a>
-                    <a href="javascript:;"><img src="../layui/static/img/s_img11.jpg"></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
+<!--底部声明栏-->
+<div th:include="footer :: footer"></div>
 
-<div class="footer">
-    <div class="ng-promise-box">
-        <div class="ng-promise w1200">
-            <p class="text">
-                <a class="icon1" href="javascript:;">7天无理由退换货</a>
-                <a class="icon2" href="javascript:;">满99元全场免邮</a>
-                <a class="icon3" style="margin-right: 0" href="javascript:;">100%品质保证</a>
-            </p>
-        </div>
-    </div>
-    <div class="mod_help w1200">
-        <p>
-            <a href="javascript:;">关于我们</a>
-            <span>|</span>
-            <a href="javascript:;">帮助中心</a>
-            <span>|</span>
-            <a href="javascript:;">售后服务</a>
-            <span>|</span>
-            <a href="javascript:;">宠物商城</a>
-            <span>|</span>
-            <a href="javascript:;">关于货源</a>
-        </p>
-        <p class="coty">E-Shop版权所有 &copy; 2020-2030</p>
-    </div>
-</div>
+
 <script type="text/javascript">
 
     layui.config({
@@ -397,6 +279,11 @@
 
     });
 
+    function findByTypeId(typeId){
+        //设置页面全局属性
+        window.localStorage.setItem("typeId",typeId);
+        location.href="/commodity";
+    }
 
 </script>
 </body>

@@ -15,6 +15,7 @@ import org.zyx.service.GoodsService;
 import org.zyx.utils.ConnectTencentCloud;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -82,6 +83,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
 
         return getGoodsVOList(goodsList);
+    }
+
+    @Override
+    public GoodsVO findById(int goodId) {
+        Goods good = goodsMapper.selectById(goodId);
+        return getGoodsVOList(Arrays.asList(good)).get(0);
     }
 
     /**

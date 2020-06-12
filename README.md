@@ -8,7 +8,7 @@
 - 新增本地的静态资源时,出现无法加载的情况可以考虑ReBuild Project(重构) 
 - 使用layui的同事,想要自己写js代码(使用jQuery),则需要在layui.js之前导入jQuery 
 - js中使用 + 加法运算符出现字符串拼接的现象,需要将字符串使用Number(str)转换为数字
-
+- 同一个Controller之间的请求调用,可以直接调用方法,设置相同的返回值即可
 
 
 
@@ -26,5 +26,22 @@
 ### LayUI使用心得
 - render:表格,表单渲染
 - on:事件绑定
+- js中数据丢失时,可以尝试定义一个额外的变量来实现数据传递
+- layui 自定义表单组件:
+```html
+    <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit" >注册</button>
+    </div>
+
+```
+```javascript
+        var form = layui.form;
+        //监听提交
+        form.on('submit(lay-buyer-submit)', function(data){
+            data.field;//获取表单中的所有数据(json格式)
+        });
+```
 
 
+### 技巧
+-  window.location.href = document.referrer ; 回到前一页并刷新该页
