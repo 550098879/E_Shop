@@ -17,7 +17,144 @@
 <!--顶部导航栏-->
 <div th:include="navigation :: nav"></div>
 
-<img src="/images/时之沙.jpg">
+
+<div style="width: 90%;margin: 20px auto;height: 600px;">
+    <h1 align="center" style="margin: 20px auto;">个人信息管理</h1>
+
+    <!--  菜单  -->
+    <div style="width:25%;height:500px;display: inline-block;float:left;border: 1px solid #e0dbdb;">
+
+        <div width="150px" height="150px" align="center" style="margin-top:20px;">
+            <img th:src="${session.buyer.face}"
+                 style="width: 150px;height:150px;border-radius: 50%;border: 1px solid #d9d3d3">
+        </div>
+        <div width="100px" height="500px" align="center">
+            <button  type="button" class="layui-btn layui-btn-primary" style="border: 0;">
+                <i class="layui-icon">&#xe608;</i> 修改
+            </button>
+
+            <h2 style="margin: 30px auto" th:text="${session.buyer.buyerName}"></h2>
+            <table class="layui-table" style="width: 90%;margin: 0 auto;">
+                <tr>
+                    <td width="30%" align="right">账户:</td>
+                    <td th:text="${session.buyer.account}"></td>
+                </tr>
+                <tr>
+                    <td width="30%" align="right">余额:</td>
+                    <td>
+                        <span th:text="'￥'+${session.buyer.balance}"></span>
+                        <button class="layui-btn layui-btn-xs layui-btn-normal">充值</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="30%" align="right">创建时间:</td>
+                    <td th:text="${session.buyer.createTime}"></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+    <!--  内容  -->
+    <div style="width:70%;height:500px;display: inline-block;float:left;border: 1px solid #e0dbdb;">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">个人信息</li>
+                <li>订单历史</li>
+                <li>地址管理</li>
+                <li>充值记录</li>
+                <li>安全中心</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <!--个人信息-->
+                    <div class="layadmin-user-login-box layadmin-user-login-body layui-form"
+                    style="margin: 30px 50px;">
+
+                        <input type="hidden" name="buyerId" th:value="${session.buyer.buyerId}">
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">账户</label>
+                            <div class="layui-input-block">
+                                <div class="layui-form-mid" th:text="${session.buyer.account}"></div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">加入时间</label>
+                            <div class="layui-input-block">
+                                <div class="layui-form-mid" th:text="${session.buyer.createTime}"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">账户余额</label>
+                            <div class="layui-input-block">
+                                <div class="layui-form-mid" th:text="${session.buyer.balance}"></div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">昵称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="buyerName" required lay-verify="required" placeholder="请输入支付密码"
+                                     th:value="${session.buyer.buyerName}"   autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+
+
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">支付密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="payPsw" required lay-verify="required" placeholder="(6位数字)"
+                                       autocomplete="off" class="layui-input" th:value="${session.buyer.payPsw}">
+                            </div>
+                        </div>
+
+
+
+                        <div class="layui-form-item login-btn">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
+                                    更新用户
+                                </button>
+                                <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
+                                    修改密码
+                                </button>
+                                <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
+                                    修改支付密码
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="layui-tab-item">
+                    <!--订单历史-->
+
+                </div>
+                <div class="layui-tab-item">
+                    <!--地址管理-->
+
+                </div>
+                <div class="layui-tab-item">
+                    <!--充值记录-->
+
+                </div>
+                <div class="layui-tab-item">
+                    <!--安全中心-->
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
 
 <!--底部声明栏-->
 <div th:include="footer :: footer"></div>
@@ -26,8 +163,10 @@
 <script>
     layui.config({
         base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['mm'],function(){
-        var  mm = layui.mm;
+    }).use(['form','element', 'mm'], function () {
+        var mm = layui.mm;
+        var element = layui.element;
+        var form = layui.form;
     });
 </script>
 

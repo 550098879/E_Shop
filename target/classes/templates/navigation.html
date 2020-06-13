@@ -15,17 +15,19 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;">导航</a>
                     <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                        <dd><a href="">所有商品</a></dd>
-                        <dd><a href="">今日新增</a></dd>
-                        <dd><a href="">关于我们</a></dd>
+                        <dd><a href="/commodity">所有商品</a></dd>
+                        <dd><a href="/buytoday">今日新增</a></dd>
+                        <dd><a href="/about">关于我们</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item" style="float: right;margin-right:10%;">.</li>
+                <li class="layui-nav-item" style="float: right;margin-right:10%;">&nbsp;</li>
 
                 <li class="layui-nav-item" th:if="${session.buyer != null}"
                     style="float: right;margin-left:5px;">
-                    <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+                    <a href=""><img th:src="${session.buyer.face}" class="layui-nav-img">
+                        <span th:text="${session.buyer.buyerName}"></span>
+                    </a>
                     <dl class="layui-nav-child">
                         <dd><a href="/information">个人中心</a></dd>
                         <dd><a href="/information">安全管理</a></dd>

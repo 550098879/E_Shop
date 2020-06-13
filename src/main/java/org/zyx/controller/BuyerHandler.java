@@ -3,10 +3,7 @@ package org.zyx.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.zyx.VO.DataVO;
 import org.zyx.entity.Buyer;
@@ -14,6 +11,8 @@ import org.zyx.entity.Users;
 import org.zyx.enums.RegStatus;
 import org.zyx.mapper.BuyerMapper;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -65,8 +64,8 @@ public class BuyerHandler {
     }
 
     @PostMapping("/login")
-    public boolean login(Buyer buyer, HttpSession session){
-
+    public boolean login(Buyer buyer, HttpSession session , HttpServletResponse response,
+                         @RequestParam(name = "rem", required=false, defaultValue="no") String rem){
         QueryWrapper<Buyer> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account",buyer.getAccount());
         queryWrapper.eq("psw",buyer.getPsw());
@@ -76,7 +75,21 @@ public class BuyerHandler {
             return false;
         }
         session.setAttribute("buyer",buyer);
-
+        if("on".equals(rem)){
+            //判断出是否记住密码,将密码放入Cookie中
+            System.out.println("记住密码");
+            response.addCookie(new Cookie("account",buyer.getAccount()));
+            response.addCookie(new Cookie("psw",buyer.getPsw()));
+        }else{
+            //移除cookie
+            System.out.println("忘记密码");
+            Cookie account = new Cookie("account", "");
+            account.setMaxAge(0);
+            response.addCookie(account);
+            Cookie psw = new Cookie("psw", "");
+            psw.setMaxAge(0);
+            response.addCookie(psw);
+        }
         return true;
     }
 
