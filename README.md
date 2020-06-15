@@ -19,6 +19,9 @@
         from goods_type g1, goods_type g2 ,users u
             where u.userId=g1.userId and u.userId=g2.userId
                 and g1.super_id= g2.type_id
+
+    select * from goods g , goods_pic p where g.good_id = p.goods_id and p.pic_type = 0
+
 ```
 
 
@@ -32,16 +35,41 @@
     <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
         <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit" >注册</button>
     </div>
+    <script>        
+    var form = layui.form;
+    //监听提交
+    form.on('submit(lay-buyer-submit)', function(data){
+        data.field;//获取表单中的所有数据(json格式)
+    });
+    </script>   
 
 ```
-```javascript
-        var form = layui.form;
-        //监听提交
-        form.on('submit(lay-buyer-submit)', function(data){
-            data.field;//获取表单中的所有数据(json格式)
+### layUI的弹出窗使用  
+
+- 使用隐藏div,基于同一个界面,使用layer.open();打开该div于弹出窗
+```html
+    <div style="display:none;" id="test">内容</div>
+    <script>
+        layui.config({
+            base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+          }).use(['mm'],function(){
+              var  mm = layui.mm;//下拉框依赖模块
+               
+              $("#id").click(function(){
+                layer.open({
+                            type: 1,
+                            title: "测试",
+                            content: $("#test"),
+                            area: ['600px', '600px'],
+                            btn: ['确定', '取消'],
+                            });
+                });
+
         });
+    </script>
+
 ```
 
 
-### 技巧
+### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页

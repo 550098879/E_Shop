@@ -25,12 +25,12 @@
     <div style="width:25%;height:500px;display: inline-block;float:left;border: 1px solid #e0dbdb;">
 
         <div width="150px" height="150px" align="center" style="margin-top:20px;">
-            <img th:src="${session.buyer.face}"
+            <img th:src="${session.buyer.face}" id="face"
                  style="width: 150px;height:150px;border-radius: 50%;border: 1px solid #d9d3d3">
         </div>
         <div width="100px" height="500px" align="center">
-            <button  type="button" class="layui-btn layui-btn-primary" style="border: 0;">
-                <i class="layui-icon">&#xe608;</i> 修改
+            <button  type="button" lay-filter="changeFace" id="changeFace" class="layui-btn layui-btn-primary" style="border: 0;">
+                <i class="layui-icon">&#xe608;</i> 修改头像
             </button>
 
             <h2 style="margin: 30px auto" th:text="${session.buyer.buyerName}"></h2>
@@ -43,7 +43,8 @@
                     <td width="30%" align="right">余额:</td>
                     <td>
                         <span th:text="'￥'+${session.buyer.balance}"></span>
-                        <button class="layui-btn layui-btn-xs layui-btn-normal">充值</button>
+                        <button class="layui-btn layui-btn-xs layui-btn-normal"
+                               id="payBalance" lay-filter="payBalance">充值</button>
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +102,13 @@
                             </div>
                         </div>
 
-
+                        <div class="layui-form-item" style="margin-left:-50px;">
+                            <label class="layui-form-label">登录密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="psw" required lay-verify="required" placeholder="(不小于6位数,字母,下划线,数字)"
+                                       autocomplete="off" class="layui-input" th:value="${session.buyer.psw}">
+                            </div>
+                        </div>
 
                         <div class="layui-form-item" style="margin-left:-50px;">
                             <label class="layui-form-label">支付密码</label>
@@ -111,26 +118,19 @@
                             </div>
                         </div>
 
-
-
                         <div class="layui-form-item login-btn">
                             <div class="layui-input-block">
                                 <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
-                                    更新用户
-                                </button>
-                                <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
-                                    修改密码
-                                </button>
-                                <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
-                                    修改支付密码
+                                    更新用户信息
                                 </button>
                             </div>
                         </div>
 
                     </div>
 
-
                 </div>
+
+
                 <div class="layui-tab-item">
                     <!--订单历史-->
 
@@ -160,13 +160,125 @@
 <div th:include="footer :: footer"></div>
 
 
+<!--弹出层-->
+    <!--充值界面-->
+<div id="pupPay" style="display: none">
+    <h2 align="center" style="margin: 50px 0">充值界面</h2>
+    <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值金额</label>
+            <div class="layui-input-block">
+                <input type="text" name="buyerName" required lay-verify="required" placeholder="请输入充值金额"
+                      autocomplete="off" class="layui-input" id="payMoney">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-radius layui-btn-normal money">30</button>
+                <button class="layui-btn layui-btn-radius layui-btn-normal money">50</button>
+                <button class="layui-btn layui-btn-radius layui-btn-normal money">100</button>
+                <button class="layui-btn layui-btn-radius layui-btn-normal money">500</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id="pay">充值</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
     layui.config({
         base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['form','element', 'mm'], function () {
+    }).use(['table','form','element', 'mm','upload'], function () {
         var mm = layui.mm;
         var element = layui.element;
         var form = layui.form;
+        var upload = layui.upload;
+        var $ = layui.$;
+        //监听头像修改
+        upload.render({
+            elem: '#changeFace'
+            , url: "/buyer/upload"
+            , accept: 'images'
+            , method: 'post'
+            , acceptMime: 'jpg/png/gif/jpeg'
+            , done: function (res) {
+                $("#face").attr("src", "/images/等待加载.gif");//等待动画
+                $.get(res.data.src, {}, function (data) {
+                    $("#face").attr("src", data);//将图片页面实时显示
+                    $("#navFace").attr("src", data);//将图片页面实时显示
+                });
+            }
+        });
+
+
+        //监听更新提交
+        form.on('submit(lay-buyer-submit)', function (data) {
+            data.field;//获取表单中的所有数据(json格式)
+            console.log(data.field);
+
+            //针对数据进行校检
+            if(!/^\d{6}$/.test(data.field.payPsw)){
+                layer.alert("支付密码必须为6位数字");
+                return false;
+            }
+            var $ = layui.$;
+            $.post("/buyer/updateById",data.field,function(data){
+                if(data >= 0 ){
+                    //更新成功
+                    layer.msg("更新成功");
+
+                }
+            });
+
+        });
+
+        $("#payBalance").on("click",function(){
+            layer.open({
+                type: 1,
+                title: "充值界面",
+                content: $("#pupPay"),
+                area: ['600px', '600px'],
+                btn: ['确定', '取消'],
+            });
+
+        });
+
+
+        //充值界面事件
+        $(".money").click(function(){
+            $("#payMoney").val($(this).text());
+        });
+        $("#pay").click(function(){
+
+            if($("#payMoney").val() < 0){
+                layer.alert("充值金额不能为负数");
+                return;
+            }
+
+            $.post("/buyer/updateBalance",{"money":$("#payMoney").val(),},function(res){
+                if(res){
+                    //刷新界面,关闭窗口
+                    layer.confirm("充值金额成功",function(){
+                        location.href="/information";
+                    });
+
+                }
+            });
+        });
+
+
+
+
+
     });
 </script>
 
