@@ -69,7 +69,10 @@ public class PageSkipHandler {
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login(HttpSession session){
+        if(session.getAttribute("buyer") != null){
+            return "index";
+        }
         return "login";
     }
 

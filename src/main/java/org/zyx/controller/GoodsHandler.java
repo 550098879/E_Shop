@@ -193,6 +193,10 @@ public class GoodsHandler {
 
         //后续添加异常处理,若没有该商品id
         GoodsVO goodsVO = goodsService.findById(goodId);
+        if(goodsVO == null){
+            modelAndView.setViewName("commodity");
+            return modelAndView;
+        }
         int typeId = goodsVO.getGoods().getTypeId();
 
         List<GoodsVO> likeGoods = goodsService.findByTypeId(typeId, 1, 3);

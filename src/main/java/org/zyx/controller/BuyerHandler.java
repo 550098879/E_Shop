@@ -252,6 +252,31 @@ public class BuyerHandler {
     }
 
 
+    @GetMapping("/deleteAddressById")
+    public boolean deleteAddressById(int addressId,HttpSession session){
+        if(addressMapper.deleteById(addressId) == 0 ){
+            return false;
+        }
+        return true;
+    }
+
+    @GetMapping("/findDefaultAddress")
+    public String findDefaultAddress(HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+
+        if(buyer == null){
+            return null;
+        }
+
+        int buyerId = buyer.getBuyerId();
+
+        QueryWrapper<Address> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("buyer_id",buyerId);
+        queryWrapper.eq("status",AddressStatus.START_USE.getType());
+        Address address = addressMapper.selectOne(queryWrapper);
+        return address.getAddress();
+    }
+
 
 
 }

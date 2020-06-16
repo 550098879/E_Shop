@@ -201,7 +201,7 @@
                             <div class="item-box">
 
                                 <div class="item" th:each="catfood : ${catGoods}">
-                                    <a href="/details"><img th:src="${catfood.cover}"></a>
+                                    <a th:href="'/goods/findById/'+${catfood.goods.goodId}"><img th:src="${catfood.cover}"></a>
                                     <div class="price">
                                         <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>
@@ -214,7 +214,7 @@
                             <div class="item-box">
 
                                 <div class="item" th:each="catfood : ${catGoods}">
-                                    <a href="/details"><img th:src="${catfood.cover}"></a>
+                                    <a th:href="'/goods/findById/'+${catfood.goods.goodId}"><img th:src="${catfood.cover}"></a>
                                     <div class="price">
                                         <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
                                         <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>

@@ -123,6 +123,9 @@
     $("#account").val($("#acc").val());
     $("#psw").val($("#pwd").val());
 
+    //移除登录属性
+    // window.sessionStorage.removeItem("online");
+
     layui.config({
         base: '/layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
     }).use(['jquery', 'form','mm'], function () {

@@ -64,7 +64,7 @@
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
                 <li class="layui-this">个人信息</li>
-                <li>订单历史</li>
+                <li>订单记录</li>
                 <li>地址管理</li>
                 <li>充值记录</li>
                 <li>安全中心</li>
@@ -136,7 +136,7 @@
 
                 <div class="layui-tab-item">
                     <!--订单历史-->
-                    <h2>订单历史</h2>
+                    <h2>订单记录</h2>
 
                 </div>
                 <div class="layui-tab-item">
@@ -225,7 +225,7 @@
 <div id="pupAddress" style="display: none">
 
     <!--三级联动-->
-    <div class="layui-form">
+    <div class="layui-form" id="pupAddressForm">
 
         <input type="hidden" th:value="${session.buyer.buyerId}" name="buyerId">
 
@@ -389,7 +389,7 @@
                     {field: "status", width: 120, title: "正在使用", templet: "#statusTpl", filter: true},
                     {
                         title: "操作",
-                        width: 180,
+                        width: 200,
                         align: "center",
                         fixed: "right",
                         toolbar: "#address-list-handle"
@@ -402,8 +402,20 @@
         });
 
         table.on("tool(receiving)", function (e) {
+            console.log(e.data);
 
-            console.log(e.event);
+            if('del' == e.event){
+                if(e.data.status == 1){
+                    layer.alert("默认地址不能删除");
+                    return;
+                }
+                $.get("/buyer/deleteAddressById",{"addressId":e.data.addressId,},function(res){
+                    layer.confirm("确定要删除该地址吗?",function(con){
+                        table.reload("receiving");
+                        layer.close(con);
+                    });
+                });
+            }
 
         });
 
@@ -463,6 +475,10 @@
             if (params.default != null) {
                 status = 1;
             }
+            if (!/^13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]\d{8}$/.test(data.field.phone)) {
+                layer.alert("请输入正确的手机号");
+                return false;
+            }
             $.post("/buyer/addReceiving",
                 {
                     "buyerId": params.buyerId,
@@ -473,6 +489,7 @@
                 }, function (res) {
                     if (res) {
                         layer.msg("添加成功");
+                        //清空form表单的所有值
                         table.reload("receiving");
                     }
 

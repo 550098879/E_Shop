@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>E-Shop宠物商城</title>
-  <link rel="stylesheet" type="text/css" href="/layui/static/css/main.css">
-  <link rel="stylesheet" type="text/css" href="/layui/layui/css/layui.css">
-  <script type="text/javascript" src="/layui/layui/layui.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <link rel="icon" href="/images/chongwu.png" type="image/x-icon"/>
+    <meta charset="UTF-8">
+    <title>E-Shop宠物商城</title>
+    <script src="/js/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/layui/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/layui/layui/css/layui.css">
+    <script type="text/javascript" src="/layui/layui/layui.js"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <link rel="icon" href="/images/chongwu.png" type="image/x-icon"/>
 </head>
 <body>
 
@@ -17,141 +20,172 @@
 <div th:include="navigation :: nav"></div>
 
 
-  <div class="header">
+<div class="header">
     <div class="headerLayout w1200">
-      <div class="headerCon">
-        <h1 class="mallLogo">
-          <a href="/" title="E-Shop 宠物商城">
-            <img src="/images/logo.png" height="130" width="130"/>
-          </a>
-        </h1>
-        <div class="mallSearch">
-          <form action="" class="layui-form" novalidate>
-            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-            <input type="hidden" name="" value="">
-          </form>
+        <div class="headerCon">
+            <h1 class="mallLogo">
+                <a href="/" title="E-Shop 宠物商城">
+                    <img src="/images/logo.png" height="130" width="130"/>
+                </a>
+            </h1>
+            <div class="mallSearch">
+                <form action="" class="layui-form" novalidate>
+                    <input type="text" name="title" required lay-verify="required" autocomplete="off"
+                           class="layui-input" placeholder="请输入需要的商品">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                    <input type="hidden" name="" value="">
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
 
-  <div class="content content-nav-base datails-content">
+<div class="content content-nav-base datails-content">
     <div class="main-nav">
-      <div class="inner-cont0">
-        <div class="inner-cont1 w1200">
-          <div class="inner-cont2">
-            <a href="/commodity" class="active">所有商品</a>
-            <a href="/buytoday">今日团购</a>
-            <a href="/about">关于我们</a>
-          </div>
+        <div class="inner-cont0">
+            <div class="inner-cont1 w1200">
+                <div class="inner-cont2">
+                    <a href="/commodity" class="active">所有商品</a>
+                    <a href="/buytoday">今日团购</a>
+                    <a href="/about">关于我们</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
     <div class="data-cont-wrap w1200">
-      <div class="crumb">
-        <a href="/">首页</a>
-        <span>></span>
-        <a href="/commodity">所有商品</a>
-        <span>></span>
-        <a href="javascript:;">产品详情</a>
-      </div>
-      <div class="product-intro layui-clear">
-        <div class="preview-wrap">
-          <a href="javascript:;"><img th:src="${good.cover}" width="90%"></a>
+        <div class="crumb">
+            <a href="/">首页</a>
+            <span>></span>
+            <a href="/commodity">所有商品</a>
+            <span>></span>
+            <a href="javascript:;">产品详情</a>
         </div>
-        <div class="itemInfo-wrap">
-          <div class="itemInfo">
-            <div class="title">
-              <h4 th:text="${good.goods.goodsName}"></h4>
-              <span><i class="layui-icon layui-icon-rate-solid"></i>收藏</span>
+        <div class="product-intro layui-clear">
+            <div class="preview-wrap">
+                <a href="javascript:;"><img th:src="${good.cover}" width="90%"></a>
             </div>
-            <div class="summary">
-              <p class="reference"><span>参考价</span> <del th:text="'￥'+${good.goods.price+50}"></del></p>
-              <p class="activity"><span>活动价</span><i>￥</i><strong class="price" th:text="${good.goods.price}"></strong></p>
-              <p class="address-box"><span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span><strong class="address">江西&nbsp;&nbsp;南昌&nbsp;&nbsp;东湖区</strong></p>
+            <div class="itemInfo-wrap">
+                <div class="itemInfo">
+                    <div class="title">
+                        <h4 th:text="${good.goods.goodsName}"></h4>
+                        <span><i class="layui-icon layui-icon-rate-solid"></i>收藏</span>
+                    </div>
+                    <div class="summary">
+                        <p class="reference"><span>参考价</span>
+                            <del th:text="'￥'+${good.goods.price+50}"></del>
+                        </p>
+                        <p class="activity"><span>活动价</span><i>￥</i><strong class="price"
+                                                                            th:text="${good.goods.price}"></strong></p>
+                        <p class="address-box"><span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span>
+                            <strong id="address" class="address">江西&nbsp;&nbsp;南昌&nbsp;&nbsp;东湖区</strong>
+                        </p>
+                    </div>
+                    <div class="choose-attrs">
+                        <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
+                            <div class="number-cont">
+                                <button  th:onclick="'countCut('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">-</button>
+                                <input  id="count" readonly name="count" value="1" style="width: 42px; height: 36px; float: none;">
+                                <button th:onclick="'countAdd('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choose-btns">
+                        <button th:onclick="'shop('+${good.goods.goodId}+')'" th:if="${session.buyer != null}"
+                                class="layui-btn layui-btn-primary purchase-btn">立刻购买
+                        </button>
+                        <a href="/login" th:if="${session.buyer == null}"
+                           class="layui-btn layui-btn-primary purchase-btn">登录购买</a>
+                        <button th:onclick="'addCart('+${good.goods.goodId}+')'"
+                                class="layui-btn  layui-btn-danger car-btn"><i
+                                class="layui-icon layui-icon-cart-simple"></i>加入购物车
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="choose-attrs">
-              <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span><div class="number-cont"><span class="cut btn">-</span>
-                <input onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
-                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
-                       maxlength="4" type="" name="" value="1"><span class="add btn">+</span></div></div>
-            </div>
-            <div class="choose-btns">
-              <button th:onclick="'shop('+${good.goods.goodId}+')'" th:if="${session.buyer != null}"
-                      class="layui-btn layui-btn-primary purchase-btn">立刻购买</button>
-              <a href="/login"  th:if="${session.buyer == null}"
-                      class="layui-btn layui-btn-primary purchase-btn">登录购买</a>
-              <button th:onclick="'addCart('+${good.goods.goodId}+')'" class="layui-btn  layui-btn-danger car-btn"><i class="layui-icon layui-icon-cart-simple"></i>加入购物车</button>
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="layui-clear" >
-        <div class="aside" style="width: 30%">
-          <h4>热销推荐</h4>
-          <div class="item-list">
-            <div class="item" th:each="likegood : ${likeGoods}" >
-              <a th:href="'/goods/findById/'+${likegood.goods.goodId}">
-                <img th:src="${likegood.cover}" width="100%">
-              </a>
-              <p><span th:text="${likegood.goods.goodsName}"></span>
-                <span th:text="'￥'+${likegood.goods.price}" class="pric"></span></p>
-            </div>
+        <div class="layui-clear">
+            <div class="aside" style="width: 30%">
+                <h4>热销推荐</h4>
+                <div class="item-list">
+                    <div class="item" th:each="likegood : ${likeGoods}">
+                        <a th:href="'/goods/findById/'+${likegood.goods.goodId}">
+                            <img th:src="${likegood.cover}" width="100%">
+                        </a>
+                        <p><span th:text="${likegood.goods.goodsName}"></span>
+                            <span th:text="'￥'+${likegood.goods.price}" class="pric"></span></p>
+                    </div>
 
-          </div>
-        </div>
-        <div class="detail" style="float: right;display: inline-block;width: 60%">
-          <h4>详情</h4>
-          <div class="item"  th:text="${good.goods.remark}">
+                </div>
+            </div>
+            <div class="detail" style="float: right;display: inline-block;width: 60%">
+                <h4>详情</h4>
+                <div class="item" th:text="${good.goods.remark}">
 
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 <!--底部声明栏-->
 <div th:include="footer :: footer"></div>
 
 <script type="text/javascript">
-  layui.config({
-    base: '/layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-  }).use(['mm','jquery'],function(){
-      var mm = layui.mm,$ = layui.$;
-      var cur = $('.number-cont input').val();
-      $('.number-cont .btn').on('click',function(){
-        if($(this).hasClass('add')){
-          cur++;
-         
-        }else{
-          if(cur > 1){
-            cur--;
-          }  
+    layui.config({
+        base: '/layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['mm', 'jquery'], function () {
+        var mm = layui.mm, $ = layui.$;
+        var cur = $('.number-cont input').val();
+        $('.number-cont .btn').on('click', function () {
+            if ($(this).hasClass('add')) {
+                cur++;
+
+            } else {
+                if (cur > 1) {
+                    cur--;
+                }
+            }
+            $('.number-cont input').val(cur)
+        })
+
+        //判断是否登录,并执行ajax请求获取当前用户默认地址
+        $.get("/buyer/findDefaultAddress", {}, function (res) {
+            if (res.length > 0) {
+                $("#address").text(res);
+            }
+        });
+
+
+    });
+
+    //数量input事件,通过th:创建事件,方便传递参数
+    function countAdd(maxSize) {
+        $("#count").val(Number($("#count").val())+1);
+        if ($("#count").val() > maxSize) {
+            $("#count").val(maxSize);
         }
-        $('.number-cont input').val(cur)
-      })
-      
-  });
+    }
+    function countCut(maxSize) {
+        $("#count").val($("#count").val()-1);
+        if ($("#count").val() < 1) {
+            $("#count").val(1);
+        }
+    }
 
 
-  //直接购买
-  function shop(goodId){
+    //直接购买
+    function shop(goodId) {
+        console.log(goodId);
+    }
 
+    //添加购物车
+    function addCart(goodId) {
+        console.log(goodId);
+        console.log($("#count").val());
 
-
-  }
-
-  //添加购物车
-  function addCart(goodId){
-
-
-  }
-
-
-
+    }
 
 
 </script>
