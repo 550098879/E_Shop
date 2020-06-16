@@ -232,6 +232,8 @@
     </div>
 
 </div>
+
+
 <!--底部声明栏-->
 <div th:include="footer :: footer"></div>
 
@@ -240,9 +242,11 @@
 
     layui.config({
         base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['mm', 'carousel'], function () {
+    }).use(['mm','util', 'carousel'], function () {
         var carousel = layui.carousel,
             mm = layui.mm;
+        var util = layui.util;
+
         var option = {
             elem: '#test1'
             , width: '100%' //设置容器宽度
@@ -276,7 +280,6 @@
         //    }
         //  })
 
-
     });
 
     function findByTypeId(typeId){
@@ -284,6 +287,7 @@
         window.localStorage.setItem("typeId",typeId);
         location.href="/commodity";
     }
+
 
 </script>
 </body>

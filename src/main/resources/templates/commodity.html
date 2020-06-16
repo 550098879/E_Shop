@@ -109,8 +109,8 @@
 <!--自己写的ajax请求-->
 <script>
     let type_id = -1;
-    let pageCounts = 1;
-
+    let pageCounts = 1;//总页数
+    let limit = 9;//每页条数
     if(window.localStorage.getItem("typeId") != null){
         type_id = window.localStorage.getItem("typeId");
         window.localStorage.removeItem("typeId");
@@ -124,7 +124,7 @@
         if(page == null){
             page = 1;
         }
-        $.get("/goods/findAllGood",{"type_id":type_id,"page":page,"limit":9,},function(response){
+        $.get("/goods/findAllGood",{"type_id":type_id,"page":page,"limit":limit,},function(response){
 
             $("#list-cont").empty();//清空内容区
 
@@ -132,7 +132,7 @@
             console.log(response);
             //设置页面属性,分页属性
             $("#count").text(response.count);
-            pageCounts = Math.ceil(response.count/12);
+            pageCounts = Math.ceil(response.count/limit);
             $("#pageCount").text(pageCounts);
             if(pageCounts == 0){
                 $("#list-cont").append("<h2 align='center'>暂无该分类的商品!(￣o￣) . z Z　</h2><hr>");
@@ -185,6 +185,7 @@
         if(currPage <= 0){
             currPage = 1;
             return;
+
         }
         getByType(null,currPage)
     }

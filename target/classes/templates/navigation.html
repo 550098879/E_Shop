@@ -48,6 +48,27 @@
                     <div class="login"><a href="/login">登录</a></div>
                 </li>
             </ul>
+
+            <!--固定块-->
+            <div id="test"></div>
+
+            <script>
+                layui.use('util', function(){
+                    var util = layui.util;
+                    //执行
+                    util.fixbar({
+                        bar1: true
+                        ,click: function(type){
+                            console.log(type);
+                            if(type === 'bar1'){
+                                //点击事件,可以考虑打开一个聊天窗口
+
+                            }
+                        }
+                    });
+                });
+            </script>
+
         </div>
 
 </body>

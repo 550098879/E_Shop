@@ -10,10 +10,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.zyx.VO.DataVO;
 import org.zyx.VO.MapVO;
+import org.zyx.entity.Address;
 import org.zyx.entity.Buyer;
 import org.zyx.entity.Store;
 import org.zyx.entity.Users;
+import org.zyx.enums.AddressStatus;
 import org.zyx.enums.RegStatus;
+import org.zyx.mapper.AddressMapper;
 import org.zyx.mapper.BuyerMapper;
 import org.zyx.mapper.StoreMapper;
 import org.zyx.utils.ConnectTencentCloud;
@@ -42,6 +45,8 @@ public class BuyerHandler {
     private ConnectTencentCloud cloud;
     @Autowired
     private StoreMapper storeMapper;
+    @Autowired
+    private AddressMapper addressMapper;
 
 
     @GetMapping("/findAll")
@@ -100,12 +105,10 @@ public class BuyerHandler {
         session.setAttribute("buyer", buyer);
         if ("on".equals(rem)) {
             //判断出是否记住密码,将密码放入Cookie中
-            System.out.println("记住密码");
             response.addCookie(new Cookie("account", buyer.getAccount()));
             response.addCookie(new Cookie("psw", buyer.getPsw()));
         } else {
             //移除cookie
-            System.out.println("忘记密码");
             Cookie account = new Cookie("account", "");
             account.setMaxAge(0);
             response.addCookie(account);
@@ -204,6 +207,51 @@ public class BuyerHandler {
 
         return buyer.getBalance();
     }
+
+
+    /**
+     * 添加收货地址
+     * @param address
+     * @return
+     */
+    @PostMapping("/addReceiving")
+    public Boolean addReceiving(Address address){
+        addressMapper.insert(address);
+        //判断是否设置为默认地址
+        if(address.getStatus() == AddressStatus.START_USE.getType()){
+            addressMapper.disableOther(address.getAddressId(),address.getBuyerId());
+        }
+
+
+        return true;
+    }
+
+    @GetMapping("/getAddress")
+    public DataVO getAddress(HttpSession session,int page, int limit){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        QueryWrapper<Address> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("buyer_id",buyer.getBuyerId());
+
+        DataVO<Address> addressVO = new DataVO<>();
+        addressVO.setCode(0);
+        addressVO.setCount(addressMapper.selectCount(queryWrapper));
+        addressVO.setMsg("地址信息");
+        addressVO.setData(addressMapper.selectPage(new Page<>(page,limit),queryWrapper).getRecords());
+
+        return addressVO;
+    }
+
+    @GetMapping("/setDefault")
+    public boolean setDefault(int addressId,HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        int buyerId = buyer.getBuyerId();
+        addressMapper.setDefault(addressId);
+        addressMapper.disableOther(addressId,buyerId);
+
+        return true;
+    }
+
+
 
 
 }

@@ -30,11 +30,52 @@
 - render:表格,表单渲染
 - on:事件绑定
 - js中数据丢失时,可以尝试定义一个额外的变量来实现数据传递
+- 想要使用checkbox 的change事件,需要将整个表格放到 <div class="layui-form"> 或 form 表单中,使用form.on("switch(filter)",function(data){}");
+```html
+<!--表格-->
+<div class="layui-form">
+    <table id="receiving" lay-filter="receiving"></table>
+</div>
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" lay-skin="switch" lay-text="默认|未使用"
+           lay-filter="changeDefault"
+           {{ d.status== "1" ? "checked" : "" }} />
+</script>
+
+<script>
+//渲染表格
+table.render({
+            id: "testCheck",
+            elem: "#receiving",
+            url: "/buyer/getAddress",
+            cols: [
+                [{field: "addressId", width: 80, title: "ID", sort: !0},
+                    {field: "status", width: 120, title: "正在使用", templet: "#statusTpl", filter: true},
+                    ]
+            ],
+            page: !0,
+            limit: 10,
+            // height: "full-350",
+            text: "对不起，加载出现异常！"
+        });
+//获取当前行的id值
+        form.on('switch(changeDefault)', function (obj) {
+                   console.log(obj);
+                   var data = $(obj.elem);
+                   //遍历父级tr，取第一个，然后查找第一个td，取值
+                   var id = data.parents('tr').first().find('td').eq(0).text();
+                   console.log(id);
+                    //后续执行相应操作
+         });
+
+</script>
+```
 - layui 自定义表单组件:
 ```html
     <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
         <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit" >注册</button>
     </div>
+<!--lay-submit="" 这个属性是必须的-->
     <script>        
     var form = layui.form;
     //监听提交
@@ -73,3 +114,4 @@
 
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页
+- a标签未添加href属性时,在onclick事件中进行跳转会回到当前页面,先执行onclick事件,后执行href跳转

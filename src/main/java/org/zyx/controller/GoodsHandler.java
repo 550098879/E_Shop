@@ -190,6 +190,8 @@ public class GoodsHandler {
 
     @GetMapping("/findById/{goodId}")
     public ModelAndView findById(@PathVariable("goodId") int goodId,ModelAndView modelAndView){
+
+        //后续添加异常处理,若没有该商品id
         GoodsVO goodsVO = goodsService.findById(goodId);
         int typeId = goodsVO.getGoods().getTypeId();
 
