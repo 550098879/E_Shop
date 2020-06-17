@@ -1,5 +1,7 @@
 package org.zyx.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import org.zyx.entity.Goods;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -15,4 +17,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @Repository
 public interface GoodsMapper extends BaseMapper<Goods> {
 
+    @Update("update goods set stock = stock - #{count} where good_id = #{goodId}")
+    void updateStock(@Param("goodId") int goodId,@Param("count") int count);
 }

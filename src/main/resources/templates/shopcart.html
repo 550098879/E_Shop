@@ -54,8 +54,8 @@
         </div>
     </div>
     <div class="banner-bg w1200">
-        <h3>夏季清仓</h3>
-        <p>宝宝被子、宝宝衣服3折起</p>
+        <h3>E-Shop</h3>
+        <p>始于心,不止于情</p>
     </div>
     <div class="cart w1200">
         <div class="cart-table-th">
@@ -111,6 +111,7 @@
                         </div>
                     </div>
                 </li>
+                <input type="hidden" value="{{item.goodCar.carId}}"/>
                 <li class="th th-item">
                     <div class="item-cont">
                         <a href="javascript:;"><img src="{{item.goodsVO.cover}}" alt=""></a>
@@ -179,11 +180,7 @@
 
 
         $.get("/shop/getShopCartInfo",{},function(res){
-            console.log(res);
-            if(res == null){
-                layer.msg("请先登录查看购物车信息");
-                return;
-            }
+
             listCont.innerHTML = mm.renderHtml(html, res)
             element.render();
             car.init()

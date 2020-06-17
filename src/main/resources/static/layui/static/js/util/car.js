@@ -77,9 +77,19 @@ layui.define(['layer'], function (exports) {
                             getSubTotal(this)
                             break;
                         case 'dele-btn':
-                            layer.confirm('你确定要删除吗', {
+                            layer.confirm('你确定要删除这项商品吗?', {
                                 yes: function (index, layero) {
-                                    layer.close(index)
+                                    //执行ajax请求,删除该条信息
+                                    // var id = layero.parents('tr').first().find('td').eq(0).text();
+                                    var carId = that.childNodes[3].defaultValue;
+
+
+                                    $.get("/shop/deleteById",{"carId":carId,},function(res){
+                                        if(res){
+                                            layer.msg("订单项删除成功");
+                                        }
+                                    });
+                                    layer.close(index);
                                     that.parentNode.removeChild(that);
                                 }
                             })
@@ -90,12 +100,16 @@ layui.define(['layer'], function (exports) {
             }
             batchdeletion.onclick = function () {
                 if (SelectedPieces.innerHTML != 0) {
-                    layer.confirm('你确定要删除吗', {
+                    layer.confirm('你确定要删除选中项吗?', {
                         yes: function (index, layero) {
+
                             layer.close(index)
                             for (var i = 0; i < uls.length; i++) {
                                 var input = uls[i].getElementsByTagName('input')[0];
                                 if (input.checked) {
+                                    console.log(input);
+                                    console.log(input.id);
+                                    $.get("/shop/deleteById",{"carId":input.id,});
                                     uls[i].parentNode.removeChild(uls[i]);
                                     i--;
                                 }

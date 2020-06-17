@@ -83,7 +83,10 @@ public class PageSkipHandler {
 
 
     @GetMapping("/shopcart")
-    public String shopCart(){
+    public String shopCart(HttpSession session){
+        if(session.getAttribute("buyer") == null){
+            return "login";
+        }
         return "shopcart";
     }
 

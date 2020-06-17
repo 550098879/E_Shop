@@ -10,14 +10,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.zyx.VO.DataVO;
 import org.zyx.VO.MapVO;
-import org.zyx.entity.Address;
-import org.zyx.entity.Buyer;
-import org.zyx.entity.Store;
-import org.zyx.entity.Users;
+import org.zyx.entity.*;
 import org.zyx.enums.AddressStatus;
 import org.zyx.enums.RegStatus;
 import org.zyx.mapper.AddressMapper;
 import org.zyx.mapper.BuyerMapper;
+import org.zyx.mapper.GoodCarMapper;
 import org.zyx.mapper.StoreMapper;
 import org.zyx.utils.ConnectTencentCloud;
 
@@ -47,7 +45,8 @@ public class BuyerHandler {
     private StoreMapper storeMapper;
     @Autowired
     private AddressMapper addressMapper;
-
+    @Autowired
+    private GoodCarMapper goodCarMapper;
 
     @GetMapping("/findAll")
     public DataVO<Buyer> findAll(int page, int limit) {
@@ -101,20 +100,20 @@ public class BuyerHandler {
         }
         //修改buyer的头像为远程头像
         buyer.setFace(cloud.getUrl(buyer.getFace().substring(buyer.getFace().lastIndexOf('/'))));
-
+        session.setAttribute("shopCartCount",
+                goodCarMapper.selectCount(new QueryWrapper<GoodCar>().eq("buyer_id",buyer.getBuyerId())));
         session.setAttribute("buyer", buyer);
         if ("on".equals(rem)) {
             //判断出是否记住密码,将密码放入Cookie中
-            response.addCookie(new Cookie("account", buyer.getAccount()));
-            response.addCookie(new Cookie("psw", buyer.getPsw()));
-        } else {
-            //移除cookie
-            Cookie account = new Cookie("account", "");
-            account.setMaxAge(0);
+            Cookie account = new Cookie("account", buyer.getAccount());
+            account.setPath("/");
             response.addCookie(account);
-            Cookie psw = new Cookie("psw", "");
-            psw.setMaxAge(0);
+            Cookie psw = new Cookie("psw", buyer.getPsw());
+            psw.setPath("/");
             response.addCookie(psw);
+        }else{
+            response.addCookie(new Cookie("account", ""));
+            response.addCookie(new Cookie("psw", ""));
         }
         return true;
     }

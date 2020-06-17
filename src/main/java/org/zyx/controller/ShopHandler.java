@@ -11,6 +11,7 @@ import org.zyx.entity.Buyer;
 import org.zyx.entity.GoodCar;
 import org.zyx.enums.ShopCarStatus;
 import org.zyx.mapper.GoodCarMapper;
+import org.zyx.mapper.GoodsMapper;
 import org.zyx.service.GoodCarService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,8 @@ public class ShopHandler {
     private GoodCarMapper goodCarMapper;
     @Autowired
     private GoodCarService goodCarService;
-
+    @Autowired
+    private GoodsMapper goodsMapper;
 
     //添加购物车
     @GetMapping("/addCart")
@@ -39,14 +41,27 @@ public class ShopHandler {
         if(buyer == null){//若用户为空,则添加cookie
             return ShopCarStatus.COOKIE_ADD.getType();
         }else{
-            GoodCar goodCar = new GoodCar();
-            goodCar.setBuyerId(buyer.getBuyerId());
-            goodCar.setGoodsId(goodId);
-            goodCar.setNum(count);
-            goodCar.setAddTime(LocalDateTime.now());
+            Integer buyerId = buyer.getBuyerId();
 
-            if(goodCarMapper.insert(goodCar) == 0){
-                return ShopCarStatus.CAR_ADD_FAILED.getType();
+            QueryWrapper<GoodCar> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("goods_id",goodId);
+            queryWrapper.eq("buyer_id",buyerId);
+            GoodCar one = goodCarMapper.selectOne(queryWrapper);
+            if (one != null){ //判断订单是否已存在
+                one.setNum(one.getNum()+count);
+                goodCarMapper.updateById(one);
+                //更新商品数量
+                goodsMapper.updateStock(goodId,count);
+            }else{
+                GoodCar goodCar = new GoodCar();
+                goodCar.setBuyerId(buyerId);
+                goodCar.setGoodsId(goodId);
+                goodCar.setNum(count);
+                goodCar.setAddTime(LocalDateTime.now());
+                if(goodCarMapper.insert(goodCar) == 0){
+                    return ShopCarStatus.CAR_ADD_FAILED.getType();
+                }
+                goodsMapper.updateStock(goodId,count);//更新数量
             }
             return ShopCarStatus.CAR_ADD_SUCCESS.getType();
         }
@@ -71,9 +86,6 @@ public class ShopHandler {
     @RequestMapping("/getShopCartInfo")
     public DataVO<CartVO> getShopCartInfo(HttpSession session){
         Buyer buyer = (Buyer) session.getAttribute("buyer");
-        if (buyer == null){
-            return null;
-        }
         int buyerId = buyer.getBuyerId();
 
         DataVO<CartVO> cartDataVO = new DataVO();
@@ -81,12 +93,21 @@ public class ShopHandler {
         cartDataVO.setMsg("购物车信息");
         cartDataVO.setCount(goodCarMapper.selectCount(new QueryWrapper<GoodCar>().eq("buyer_id",buyerId)));
         cartDataVO.setData(goodCarService.findAllCartInfo(buyerId));
-        System.out.println(cartDataVO);
 
         return cartDataVO;
     }
 
+    @GetMapping("/getShopCartCount")
+    public int getShopCartCount(HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        return goodCarMapper.selectCount(new QueryWrapper<GoodCar>().eq("buyer_id",buyer.getBuyerId()))  ;
+    }
 
+    @GetMapping("/deleteById")
+    public Boolean deleteById(int carId){
+        goodCarMapper.deleteById(carId);
+        return true;
+    }
 
 
 

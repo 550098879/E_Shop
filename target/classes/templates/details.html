@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>E-Shop宠物商城</title>
-    <script src="/js/jquery-1.7.2.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/layui/static/css/main.css">
     <link rel="stylesheet" type="text/css" href="/layui/layui/css/layui.css">
     <script type="text/javascript" src="/layui/layui/layui.js"></script>
@@ -103,6 +102,7 @@
                         <a href="/login" th:if="${session.buyer == null}"
                            class="layui-btn layui-btn-primary purchase-btn">登录购买</a>
                         <button th:onclick="'addCart('+${good.goods.goodId}+')'"
+                                th:if="${session.buyer != null}"
                                 class="layui-btn  layui-btn-danger car-btn"><i
                                 class="layui-icon layui-icon-cart-simple"></i>加入购物车
                         </button>

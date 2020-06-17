@@ -3,10 +3,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 
-
 <body>
     <!--顶部导航栏-->
         <div class="site-nav-bg" style="width: 100%; margin: 20px 0" th:fragment="nav">
+
+            <script src="/js/jquery-1.7.2.min.js"></script>
             <ul class="layui-nav" style="background:#b49fd0;">
                 <li class="layui-nav-item" style="margin-left:10%;">
                     <a href="/"> <i class="layui-icon layui-icon-home"></i>首页</a>
@@ -39,9 +40,16 @@
 
                 </li>
 
-                <li class="layui-nav-item" style="float: right;">
-                    <a href="/shopcart"><i class="layui-icon layui-icon-cart-simple"></i> 购物车
-                        <span class="layui-badge">2</span></a>
+                <li class="layui-nav-item" style="float: right;" th:if="${session.buyer != null}">
+                    <a href="/shopcart"><i class="layui-icon layui-icon-cart-simple"></i>
+                        购物车
+                        <span class="layui-badge ShopCartCount" ></span></a>
+
+                        <script>
+                            $.get("/shop/getShopCartCount",function(res){
+                                $(".ShopCartCount").text(res);
+                            });
+                        </script>
                 </li>
 
                 <li class="layui-nav-item"  th:if="${session.buyer == null}"

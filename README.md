@@ -10,7 +10,7 @@
 - js中使用 + 加法运算符出现字符串拼接的现象,需要将字符串使用Number(str)转换为数字
 - 同一个Controller之间的请求调用,可以直接调用方法,设置相同的返回值即可
 - MySQL的 decimal 数据类型,需要手动设置精度 decimal(小数点前保留位数,小数点后保留位数);
-
+- Cookie失效的原因: 未设置path属性,导致客户端无法找到cookie? cookie.setPath("/"); cookie.setMaxAge("2400");
 
 ### SQL 语句
 - 多表关联查询

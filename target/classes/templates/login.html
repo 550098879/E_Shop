@@ -111,10 +111,10 @@
 <div th:include="footer :: footer"></div>
 
 
-<input type="hidden" id="acc" th:each="cookie :${#httpServletRequest.getCookies()}"
+<input type="hidden" id="acc" th:each="cookie :${#request.getCookies()}"
        th:if="${cookie.getName().equals('psw')}"
        th:value="${cookie.getValue()}">
-<input type="hidden" id="pwd"  th:each="cookie :${#httpServletRequest.getCookies()}"
+<input type="hidden" id="pwd"  th:each="cookie :${#request.getCookies()}"
        th:if="${cookie.getName().equals('account')}"
        th:value="${cookie.getValue()}">
 
@@ -122,7 +122,6 @@
 
     $("#account").val($("#acc").val());
     $("#psw").val($("#pwd").val());
-
     //移除登录属性
     // window.sessionStorage.removeItem("online");
 

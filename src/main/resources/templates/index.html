@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>E-Shop宠物商城</title>
+    <script src="/js/jquery-1.7.2.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../layui/static/css/main.css">
     <link rel="stylesheet" type="text/css" href="../layui/layui/css/layui.css">
     <script type="text/javascript" src="../layui/layui/layui.js"></script>
@@ -157,8 +158,8 @@
                                 <div class="item" th:each="dogfood : ${dogGoods}">
                                     <a th:href="'/goods/findById/'+${dogfood.goods.goodId}"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
-                                        <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
-                                        <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
+                                        <span th:text="'￥'+${dogfood.goods.price}"></span>
+                                        <del th:text="'￥'+${dogfood.goods.price+50}"></del>
                                     </div>
                                     <div class="title" style="margin-top:-5px;"
                                          th:text="${dogfood.goods.goodsName}"></div>
@@ -170,8 +171,8 @@
                                 <div class="item" th:each="dogfood : ${dogGoods}">
                                     <a th:href="'/goods/findById/'+${dogfood.goods.goodId}"><img th:src="${dogfood.cover}"></a>
                                     <div class="price">
-                                        <span th:text="'￥'+${dogfood.goods.price}+'.00'"></span>
-                                        <del th:text="'￥'+${dogfood.goods.price+50}+'.00'"></del>
+                                        <span th:text="'￥'+${dogfood.goods.price}"></span>
+                                        <del th:text="'￥'+${dogfood.goods.price+50}"></del>
                                     </div>
                                     <div class="title" style="margin-top:-5px;"
                                          th:text="${dogfood.goods.goodsName}"></div>
@@ -203,8 +204,8 @@
                                 <div class="item" th:each="catfood : ${catGoods}">
                                     <a th:href="'/goods/findById/'+${catfood.goods.goodId}"><img th:src="${catfood.cover}"></a>
                                     <div class="price">
-                                        <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
-                                        <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>
+                                        <span th:text="'￥'+${catfood.goods.price}"></span>
+                                        <del th:text="'￥'+${catfood.goods.price+50}"></del>
                                     </div>
                                     <div class="title" style="margin-top:-5px;"
                                          th:text="${catfood.goods.goodsName}"></div>
@@ -216,8 +217,8 @@
                                 <div class="item" th:each="catfood : ${catGoods}">
                                     <a th:href="'/goods/findById/'+${catfood.goods.goodId}"><img th:src="${catfood.cover}"></a>
                                     <div class="price">
-                                        <span th:text="'￥'+${catfood.goods.price}+'.00'"></span>
-                                        <del th:text="'￥'+${catfood.goods.price+50}+'.00'"></del>
+                                        <span th:text="'￥'+${catfood.goods.price}"></span>
+                                        <del th:text="'￥'+${catfood.goods.price+50}"></del>
                                     </div>
                                     <div class="title" style="margin-top:-5px;"
                                          th:text="${catfood.goods.goodsName}"></div>
