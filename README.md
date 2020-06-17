@@ -9,7 +9,7 @@
 - 使用layui的同事,想要自己写js代码(使用jQuery),则需要在layui.js之前导入jQuery 
 - js中使用 + 加法运算符出现字符串拼接的现象,需要将字符串使用Number(str)转换为数字
 - 同一个Controller之间的请求调用,可以直接调用方法,设置相同的返回值即可
-
+- MySQL的 decimal 数据类型,需要手动设置精度 decimal(小数点前保留位数,小数点后保留位数);
 
 
 ### SQL 语句
@@ -85,6 +85,11 @@ table.render({
     </script>   
 
 ```
+- 想要在非layui.use();中使用layui的组件时,只需要引入 layui.all.js 文件即可
+```html
+<script src="/layui/layui/layui.all.js"></script>
+```
+
 ### layUI的弹出窗使用  
 
 - 使用隐藏div,基于同一个界面,使用layer.open();打开该div于弹出窗
