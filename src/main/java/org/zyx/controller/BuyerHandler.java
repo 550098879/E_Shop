@@ -28,10 +28,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/buyer")
@@ -56,7 +53,13 @@ public class BuyerHandler {
         dataVO.setMsg("买家数据");
         //分页查询
         Page<Buyer> page1 = new Page<>(page, limit);
-        dataVO.setData(buyerMapper.selectPage(page1, null).getRecords());
+        List<Buyer> list = buyerMapper.selectPage(page1, null).getRecords();
+        List<Buyer> buyerList = new ArrayList<>();
+        for(Buyer buyer : list){
+            buyer.setFace(cloud.getUrl(buyer.getFace().substring(buyer.getFace().lastIndexOf('/'))));
+            buyerList.add(buyer);
+        }
+        dataVO.setData(buyerList);
         return dataVO;
     }
 
@@ -262,11 +265,9 @@ public class BuyerHandler {
     @GetMapping("/findDefaultAddress")
     public String findDefaultAddress(HttpSession session){
         Buyer buyer = (Buyer) session.getAttribute("buyer");
-
         if(buyer == null){
             return null;
         }
-
         int buyerId = buyer.getBuyerId();
 
         QueryWrapper<Address> queryWrapper = new QueryWrapper<>();
@@ -276,6 +277,15 @@ public class BuyerHandler {
         return address.getAddress();
     }
 
+
+    @PostMapping("/verifyPayPsw")
+    public Boolean verifyPayPsw(String payPsw,HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        if(buyer.getPayPsw().equals(payPsw)){
+            return true;
+        }
+        return false;
+    }
 
 
 }

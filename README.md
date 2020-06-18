@@ -12,7 +12,7 @@
 - MySQL的 decimal 数据类型,需要手动设置精度 decimal(小数点前保留位数,小数点后保留位数);
 - Cookie失效的原因: 未设置path属性,导致客户端无法找到cookie? cookie.setPath("/"); cookie.setMaxAge("2400");
 - BigDecimal 数据类型的add方法会返回一个BigDecimal 对象,所以需要:bigDecimal = bigDecimal.add(new BigDecimal(123));
-
+- 事务回滚: TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); 
 
 
 ### SQL 语句

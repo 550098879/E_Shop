@@ -106,7 +106,8 @@
                 <li class="th th-chk">
                     <div class="select-all">
                         <div class="cart-checkbox">
-                            <input class="CheckBoxShop check" id="{{item.goodCar.carId}}" type="checkbox" num="all" name="select-all"
+                            <input class="CheckBoxShop check" id="{{item.goodCar.carId}}" type="checkbox" num="all"
+                                   name="select-all"
                                    value="true">
                         </div>
                     </div>
@@ -154,6 +155,24 @@
             <div class="th batch-deletion">
                 <span class="batch-dele-btn" style="color: #01AAED;">批量删除</span>
             </div>
+            <div class="th batch-deletion">
+                <span  style="color: #bd3d3d;margin-left: 80px;">收货地址:</span>
+                <span id="address"  style="color: #bd3d3d;"></span>
+                <script>
+                    $.get("/buyer/findDefaultAddress", {}, function (res) {
+                        if (res.length > 0) {
+                            $("#address").text(res);
+                        }
+                    });
+
+                    $("#address").click(function(){
+                        layer.confirm("使用默认地址,若想要修改请先修改默认地址",function(){
+                            location.href = "/information";
+                        });
+                    });
+
+                </script>
+            </div>
             <div class="th Settlement">
                 <button class="layui-btn" id="clearing">结算</button>
             </div>
@@ -177,9 +196,7 @@
         // 模版导入数据
         var html = demo.innerHTML,
             listCont = document.getElementById('list-cont');
-
-
-        $.get("/shop/getShopCartInfo",{},function(res){
+        $.get("/shop/getShopCartInfo", {}, function (res) {
 
             listCont.innerHTML = mm.renderHtml(html, res)
             element.render();

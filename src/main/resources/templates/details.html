@@ -89,19 +89,19 @@
                         <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
                             <div class="number-cont">
                                 <button  th:onclick="'countCut('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">-</button>
-                                <input  id="count" readonly name="count" value="1" style="width: 42px; height: 36px; float: none;">
+                                <input  id="count" readonly name="count" value="0" style="width: 42px; height: 36px; float: none;">
                                 <button th:onclick="'countAdd('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">+</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="choose-btns">
-                        <button th:onclick="'shop('+${good.goods.goodId}+')'" th:if="${session.buyer != null}"
+                        <button th:onclick="'shop('+${good.goods.goodId}+','+${good.goods.stock}+')'" th:if="${session.buyer != null}"
                                 class="layui-btn layui-btn-primary purchase-btn">立刻购买
                         </button>
                         <a href="/login" th:if="${session.buyer == null}"
                            class="layui-btn layui-btn-primary purchase-btn">登录购买</a>
-                        <button th:onclick="'addCart('+${good.goods.goodId}+')'"
+                        <button th:onclick="'addCart('+${good.goods.goodId}+','+${good.goods.stock}+')'"
                                 th:if="${session.buyer != null}"
                                 class="layui-btn  layui-btn-danger car-btn"><i
                                 class="layui-icon layui-icon-cart-simple"></i>加入购物车
@@ -137,8 +137,14 @@
 <div th:include="footer :: footer"></div>
 
 <!--隐藏弹出窗口-->
-<!--订单结算窗口-->
+    <!--订单结算窗口-->
+<div style="display: none" id="orderClearing">
 
+
+
+
+
+</div>
 
 
 
@@ -171,6 +177,7 @@
 
     });
 
+
     //数量input事件,通过th:创建事件,方便传递参数
     function countAdd(maxSize) {
         $("#count").val(Number($("#count").val())+1);
@@ -181,27 +188,38 @@
     }
     function countCut(maxSize) {
         $("#count").val($("#count").val()-1);
-        if ($("#count").val() < 1) {
-            $("#count").val(1);
+        if ($("#count").val() <= 0) {
+            $("#count").val(0);
         }
         //$("#stock").text(maxSize- $("#count").val());减少库存
     }
 
 
     //直接购买,增加订单,显示订单详情页
-    function shop(goodId) {
+    function shop(goodId,stock) {
+        if(stock == 0){
+            layer.msg("库存不足");
+            return;
+        }
         console.log(goodId);
         var count = $("#count").val();
-
+        if(count == 0){
+            return;
+        }
 
     }
 
     //添加购物车
-    function addCart(goodId) {
-        console.log(goodId);
-        console.log($("#count").val());
-
-       $.get("/shop/addCart",{"goodId":goodId,"count":$("#count").val(),},function(res){
+    function addCart(goodId,stock) {
+        var count = $("#count").val();
+        if(stock == 0){
+            layer.msg("库存不足");
+            return;
+        }
+        if(count == 0){
+            return;
+        }
+       $.get("/shop/addCart",{"goodId":goodId,"count":count,},function(res){
            console.log(res);
             if(res == 0){
                 layer.msg("商品添加购物车成功,请登录后购买");

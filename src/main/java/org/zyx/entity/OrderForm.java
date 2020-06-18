@@ -27,7 +27,7 @@ public class OrderForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "order_id", type = IdType.AUTO)
+    @TableId(value = "order_id", type = IdType.INPUT)
     private Integer orderId;
 
     /**
