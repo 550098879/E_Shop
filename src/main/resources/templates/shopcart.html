@@ -132,7 +132,7 @@
                     </div>
                 </li>
                 <li class="th th-sum">
-                    <span class="sum">{{item.goodsVO.goods.price}}</span>
+                    <span class="sum">{{item.goodsVO.goods.price * item.goodCar.num}}</span>
                 </li>
                 <li class="th th-op">
                     <span class="dele-btn">删除</span>
@@ -152,10 +152,10 @@
                 </div>
             </div>
             <div class="th batch-deletion">
-                <span class="batch-dele-btn">批量删除</span>
+                <span class="batch-dele-btn" style="color: #01AAED;">批量删除</span>
             </div>
             <div class="th Settlement">
-                <button class="layui-btn">结算</button>
+                <button class="layui-btn" id="clearing">结算</button>
             </div>
             <div class="th total">
                 <p>应付：<span class="pieces-total">0</span></p>

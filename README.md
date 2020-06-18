@@ -11,6 +11,9 @@
 - 同一个Controller之间的请求调用,可以直接调用方法,设置相同的返回值即可
 - MySQL的 decimal 数据类型,需要手动设置精度 decimal(小数点前保留位数,小数点后保留位数);
 - Cookie失效的原因: 未设置path属性,导致客户端无法找到cookie? cookie.setPath("/"); cookie.setMaxAge("2400");
+- BigDecimal 数据类型的add方法会返回一个BigDecimal 对象,所以需要:bigDecimal = bigDecimal.add(new BigDecimal(123));
+
+
 
 ### SQL 语句
 - 多表关联查询
@@ -120,3 +123,28 @@ table.render({
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页
 - a标签未添加href属性时,在onclick事件中进行跳转会回到当前页面,先执行onclick事件,后执行href跳转
+
+
+### 前端ajax请求发送json对象以及服务端获取
+```javascript
+//js
+$.ajax({
+    url: "/shop/clearing",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json;charset=UTF-8",
+    data: JSON.stringify(carIdList),
+    success: function () {
+        layer.msg("订单结算成功");
+    },
+
+});
+
+```
+```java
+//java
+@PostMapping("/clearing")  //map可以换成对应实体类的list集合
+public void clearing(@RequestBody Map carIdList, HttpSession session){
+    carIdList.forEach((k,v)->System.out.println("key : " + k + " value : " + v));
+}
+```

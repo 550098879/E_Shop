@@ -15,6 +15,10 @@ layui.define(['layer'], function (exports) {
             var SelectedPieces = document.getElementsByClassName('Selected-pieces')[0];//总件数
             var piecesTotal = document.getElementsByClassName('pieces-total')[0];//总价
             var batchdeletion = document.getElementsByClassName('batch-deletion')[0]//批量删除按钮
+
+            //自定义所需参数
+            var clearing = document.getElementById("clearing");//结算按钮
+            var carIdList = {};//存储需要结算的id值
             //计算
             function getTotal() {
                 var seleted = 0, price = 0;
@@ -82,10 +86,8 @@ layui.define(['layer'], function (exports) {
                                     //执行ajax请求,删除该条信息
                                     // var id = layero.parents('tr').first().find('td').eq(0).text();
                                     var carId = that.childNodes[3].defaultValue;
-
-
-                                    $.get("/shop/deleteById",{"carId":carId,},function(res){
-                                        if(res){
+                                    $.get("/shop/deleteById", {"carId": carId,}, function (res) {
+                                        if (res) {
                                             layer.msg("订单项删除成功");
                                         }
                                     });
@@ -109,7 +111,7 @@ layui.define(['layer'], function (exports) {
                                 if (input.checked) {
                                     console.log(input);
                                     console.log(input.id);
-                                    $.get("/shop/deleteById",{"carId":input.id,});
+                                    $.get("/shop/deleteById", {"carId": input.id,});
                                     uls[i].parentNode.removeChild(uls[i]);
                                     i--;
                                 }
@@ -123,8 +125,50 @@ layui.define(['layer'], function (exports) {
                 }
 
             }
+            //结算按钮事件
+            clearing.onclick = function () {
+                if (SelectedPieces.innerHTML != 0) {
+                    layer.confirm('你确定要结算订单吗?', {
+                        yes: function (index, layero) {
+                            layer.close(index)
+
+                            for (var i = 0; i < uls.length; i++) {
+                                var input = uls[i].getElementsByTagName('input')[0];
+                                if (input.checked) {
+                                    console.log(input.id);
+                                    carIdList[input.id] = input.id;
+                                    console.log(uls[i]);
+                                    uls[i].parentNode.removeChild(uls[i]);//还是要移除商品项,否则会死循环
+                                    i--;
+                                }
+                            }
+                            //获取到全部的被选中的商品id后,发送ajax请求,完成订单详情页面,及结算信息
+                            console.log(carIdList);
+                            $.ajax({
+                                url: "/shop/clearing",
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json;charset=UTF-8",
+                                data: JSON.stringify(carIdList),
+                                success: function () {
+                                    layer.msg("订单结算成功");
+                                },
+
+                            });
+                            getTotal()
+                        }
+                    })
+                } else {
+                    layer.msg('请选择商品')
+                }
+
+            }
+
+
             checkAll[0].checked = true;
             checkAll[0].onclick();
+
+
         }
 
     }

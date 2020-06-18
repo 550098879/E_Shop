@@ -1,8 +1,12 @@
 package org.zyx.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import org.zyx.entity.Buyer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -14,5 +18,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @Repository
 public interface BuyerMapper extends BaseMapper<Buyer> {
+
+    @Update("update buyer set balance = balance - #{totalMoney} where buyer_id = #{buyerId}")
+    void updateBalance(@Param("buyerId") int buyerId, @Param("totalMoney") BigDecimal totalMoney);
 
 }

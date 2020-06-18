@@ -136,6 +136,13 @@
 <!--底部声明栏-->
 <div th:include="footer :: footer"></div>
 
+<!--隐藏弹出窗口-->
+<!--订单结算窗口-->
+
+
+
+
+
 <script src="/layui/layui/layui.all.js"></script>
 <script type="text/javascript">
     layui.config({
@@ -170,20 +177,23 @@
         if ($("#count").val() > maxSize) {
             $("#count").val(maxSize);
         }
-        $("#stock").text(maxSize- $("#count").val());
+        //$("#stock").text(maxSize- $("#count").val());减少库存
     }
     function countCut(maxSize) {
         $("#count").val($("#count").val()-1);
         if ($("#count").val() < 1) {
             $("#count").val(1);
         }
-        $("#stock").text(maxSize- $("#count").val());
+        //$("#stock").text(maxSize- $("#count").val());减少库存
     }
 
 
-    //直接购买
+    //直接购买,增加订单,显示订单详情页
     function shop(goodId) {
         console.log(goodId);
+        var count = $("#count").val();
+
+
     }
 
     //添加购物车

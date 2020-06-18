@@ -26,7 +26,7 @@
 
                 <li class="layui-nav-item" th:if="${session.buyer != null}"
                     style="float: right;margin-left:5px;">
-                    <a href=""><img id="navFace" th:src="${session.buyer.face}" class="layui-nav-img">
+                    <a href="/information"><img id="navFace" th:src="${session.buyer.face}" class="layui-nav-img">
                         <span th:text="${session.buyer.buyerName}"></span>
                     </a>
                     <dl class="layui-nav-child">

@@ -133,7 +133,6 @@
         //监听提交
         form.on('submit(lay-buyer-login)', function (data) {
             data.field;//获取表单中的所有数据(json格式)
-            console.log(data.field);
             var code = show_num.join("").toLowerCase();
             var inputCode = data.field.vercode.toLowerCase();
             if (inputCode != code) {
