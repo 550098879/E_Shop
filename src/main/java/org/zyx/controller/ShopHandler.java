@@ -75,20 +75,61 @@ public class ShopHandler {
 
     }
 
+
     //直接购物
+    @Transactional
     @GetMapping("/shop")
-    public String shop(HttpSession session) {
+    public int shop(int goodId,int count,HttpSession session) {
         Buyer buyer = (Buyer) session.getAttribute("buyer");//获取当前登入用户
-        if (buyer == null) {
-            return "login";
+        Goods good = goodsMapper.selectById(goodId);//获取商品信息
+        BigDecimal totalMoney = good.getPrice().multiply(new BigDecimal(count));
+        if(good.getStock() < count){
+            return ClearingStatus.NOT_ENOUGH_STOCK.getType();
         }
         //处理购物逻辑
-        //
+        //1.生成对应的订单表
+        OrderForm orderItem = new OrderForm();
+        orderItem.setOrderId((int)System.currentTimeMillis());//使用时间戳作为订单id,改为订单号;优先生成订单号
+        orderItem.setCreateTime(LocalDateTime.now());
 
+        //设置订单相关信息
+        QueryWrapper<Address> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("buyer_id",buyer.getBuyerId());
+        queryWrapper.eq("status", AddressStatus.START_USE.getType());//获取默认地址
+        Address address = addressMapper.selectOne(queryWrapper);
+        orderItem.setAddress(address.getAddress());//设置地址
+        orderItem.setPhone(address.getPhone());
+        orderItem.setNicheng(address.getNicheng());//
+        orderItem.setBuyerId(buyer.getBuyerId());
+        orderItem.setTotal(totalMoney);//订单总价
 
+        //减少用户的余额
+        //先判断用户余额是否足够
+        if(buyer.getBalance().compareTo(totalMoney) < 0){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ClearingStatus.NOT_ENOUGH_MONEY.getType();
+        }
+        buyer.setBalance(buyer.getBalance().subtract(totalMoney));
+        //更新余额
+        Buyer updateBuyer = buyerMapper.selectById(buyer.getBuyerId());
+        updateBuyer.setBalance(buyer.getBalance());
+        buyerMapper.updateById(updateBuyer);
+        session.setAttribute("buyer",buyer);//更新session中的buyer信息
 
+        //更新商品信数量
+        good.setStock(good.getStock()-count);
+        goodsMapper.updateById(good);
 
-        return "";
+        //2.生成订单详情(以订单id添加)
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setGoodId(good.getGoodId());
+        orderDetail.setNum(count);
+        orderDetail.setOrderId(orderItem.getOrderId());
+        orderDetailMapper.insert(orderDetail);//插入订单详情
+
+        orderFormMapper.insert(orderItem);//添加订单表
+
+        return ClearingStatus.CLEARING_SUCCESS.getType();
     }
 
     //获取购物车信息
@@ -170,7 +211,11 @@ public class ShopHandler {
         }
 
         buyer.setBalance(buyer.getBalance().subtract(totalMoney));
-        buyerMapper.updateBalance(buyer.getBuyerId(),buyer.getBalance());//更新余额
+        //更新余额
+        Buyer updateBuyer = buyerMapper.selectById(buyer.getBuyerId());
+        updateBuyer.setBalance(buyer.getBalance());
+        buyerMapper.updateById(updateBuyer);
+
         session.setAttribute("buyer",buyer);//更新session中的buyer信息
 
 
@@ -189,6 +234,5 @@ public class ShopHandler {
 
         return ClearingStatus.CLEARING_SUCCESS.getType();
     }
-
 
 }

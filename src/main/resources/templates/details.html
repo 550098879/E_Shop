@@ -197,15 +197,59 @@
 
     //直接购买,增加订单,显示订单详情页
     function shop(goodId,stock) {
+        var count = $("#count").val();
         if(stock == 0){
             layer.msg("库存不足");
             return;
         }
-        console.log(goodId);
-        var count = $("#count").val();
         if(count == 0){
             return;
         }
+
+        layer.prompt({formType: 1, title: "请输入支付密码:"}, function (payPsw, index) {
+
+            $.post("/buyer/verifyPayPsw", {"payPsw": payPsw,}, function (istrue) {
+                if (istrue){
+
+                    $.get("/shop/shop",{"goodId":goodId,"count":count,},function(res){
+
+                        if (res == 3) {
+                            layer.msg("订单结算成功");
+                            location.reload();
+                        } else if (res == 2) {
+                            layer.confirm("订单结算失败", function () {
+                                location.reload();
+                            });
+                        } else if (res == 1) {
+                            layer.confirm("商品库存不足", function () {
+                                location.reload();
+                            });
+
+                        } else if (res == 0) {
+                            layer.confirm("账户余额不足,请前往充值后购买", function () {
+                                location.href = "/information";
+                            });
+                        }
+
+                    });
+
+
+                    layer.close(index);
+                }else{
+                    layer.msg("支付密码错误,请重试");
+                    layer.close(index);
+                }
+
+            })
+
+
+        });
+
+
+
+
+
+
 
     }
 

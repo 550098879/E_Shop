@@ -142,7 +142,6 @@ layui.define(['layer'], function (exports) {
                                         i--;
                                     }
                                 }
-
                                 //获取到全部的被选中的商品id后,发送ajax请求,完成订单详情页面,及结算信息
                                 $.ajax({
                                     url: "/shop/clearing",
@@ -153,17 +152,17 @@ layui.define(['layer'], function (exports) {
                                     success: function (res) {
                                         if (res == 3) {
                                             layer.msg("订单结算成功");
-                                        }else if(res == 2){
-                                            layer.confirm("订单结算失败",function(){
+                                        } else if (res == 2) {
+                                            layer.confirm("订单结算失败", function () {
                                                 location.reload();
                                             });
-                                        }else if(res == 1){
-                                            layer.confirm("商品库存不足",function(){
+                                        } else if (res == 1) {
+                                            layer.confirm("商品库存不足", function () {
                                                 location.reload();
                                             });
 
-                                        }else if(res == 0){
-                                            layer.confirm("账户余额不足,请前往充值后购买",function(){
+                                        } else if (res == 0) {
+                                            layer.confirm("账户余额不足,请前往充值后购买", function () {
                                                 location.href = "/information";
                                             });
                                         }
@@ -173,7 +172,6 @@ layui.define(['layer'], function (exports) {
                                 getTotal()
 
                             } else {
-                                stop = 0;
                                 layer.msg("支付密码错误,请重试");
                                 layer.close(index);
                             }

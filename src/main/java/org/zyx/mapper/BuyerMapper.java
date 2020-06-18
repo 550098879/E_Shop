@@ -19,7 +19,4 @@ import java.math.BigDecimal;
 @Repository
 public interface BuyerMapper extends BaseMapper<Buyer> {
 
-    @Update("update buyer set balance = balance - #{totalMoney} where buyer_id = #{buyerId}")
-    void updateBalance(@Param("buyerId") int buyerId, @Param("totalMoney") BigDecimal totalMoney);
-
 }
