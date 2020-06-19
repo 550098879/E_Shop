@@ -165,6 +165,10 @@ layui.define(['layer'], function (exports) {
                                             layer.confirm("账户余额不足,请前往充值后购买", function () {
                                                 location.href = "/information";
                                             });
+                                        }else if (res == 4) {
+                                            layer.confirm("请先设置默认地址", function () {
+                                                location.href = "/information";
+                                            });
                                         }
                                     },
 

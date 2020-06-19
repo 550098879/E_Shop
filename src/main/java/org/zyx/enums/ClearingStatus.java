@@ -9,6 +9,7 @@ public enum ClearingStatus {
     NOT_ENOUGH_STOCK(1,"库存不足"),
     CLEARING_FILED(2,"结算失败"),
     CLEARING_SUCCESS(3,"结算成功"),
+    ADDRESS_EMPTY(4,"没有默认地址"),
     ;
 
     private int type;

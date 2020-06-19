@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 网站用户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+
+    <button class="layui-btn layui-btn-normal">查看未发货</button>
+    <button class="layui-btn layui-btn-normal">查看全部</button>
+    <div class="layui-card-body">
+
+        <table id="LAY-order-list" lay-filter="LAY-order-list"></table>
+
+        <script type="text/html" id="table-list-handle">
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"
+                    {{ d.status !="0" ? "disabled='disabled'" : "" }}>
+            <i class="layui-icon layui-icon-edit"></i>
+            {{ d.status !="0" ? "已发货" : "待发货" }}</button>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                    class="layui-icon layui-icon-delete"></i>删除</a>
+        </script>
+    </div>
+</div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table'], function () {
+        var $ = layui.$
+            , table = layui.table;
+        //事件
+        table.render({
+            id: "LAY-order-list",
+            elem: "#LAY-order-list",
+            url: "/order/findOrderFormByAdmin",
+            cols: [
+                [{field: "orderId", width: 120, title: "订单号", sort: !0},
+                    {field: "createTime", width: 140, title: "下单时间", sort: !0},
+                    {
+                        field: "deliveryTime", width: 150, title: "发货时间", templet: function (data) {
+                            return data.deliveryTime == null ? "未发货" : data.deliveryTime;
+                        }
+                    },
+                    {
+                        field: "teceiveTime", width: 150, title: "收货时间", templet: function (data) {
+                            return data.teceiveTime == null ? "未收货" : data.teceiveTime;
+                        }
+                    },
+                    {field: "address", width: 150, title: "收货地址"},
+                    {field: "phone", width: 120, title: "联系号码"},
+                    {field: "total", width: 80, title: "总价/￥"},
+                    {
+                        field: "status", width: 80, title: "状态", templet: function (data) {
+                            if (data.status == 0) {
+                                return "未发货";
+                            } else if (data.status == 1) {
+                                return "已发货";
+                            } else if (data.status == 2) {
+                                return "已收货";
+                            }
+                        }
+                    },
+                    {
+                        title: "操作",
+                        width: 200,
+                        align: "center",
+                        fixed: "right",
+                        toolbar: "#table-list-handle"
+                    },]
+            ],
+            page: !0,
+            limit: 10,
+            text: "对不起，加载出现异常！",
+        }),
+            table.on("tool(LAY-order-list)", function (e) {
+                console.log(e.data);
+                if ('edit' == e.event) {
+                    //发货
+                    $.get("/order/changeStatus", {"orderId": e.data.orderId, "status": 1,}, function (res) {
+                        if (res) {
+                            layer.msg("发货成功");
+                            table.reload("LAY-order-list");
+                        }
+                    });
+
+                } else if ("del" == e.event) {
+                    //执行删除
+                }
+
+            });
+
+
+    });
+</script>
+</body>
+</html>

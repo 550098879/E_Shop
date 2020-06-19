@@ -97,6 +97,11 @@ public class ShopHandler {
         queryWrapper.eq("buyer_id",buyer.getBuyerId());
         queryWrapper.eq("status", AddressStatus.START_USE.getType());//获取默认地址
         Address address = addressMapper.selectOne(queryWrapper);
+
+        if(address == null){
+            return ClearingStatus.ADDRESS_EMPTY.getType();
+        }
+
         orderItem.setAddress(address.getAddress());//设置地址
         orderItem.setPhone(address.getPhone());
         orderItem.setNicheng(address.getNicheng());//
@@ -224,6 +229,10 @@ public class ShopHandler {
         queryWrapper.eq("buyer_id",buyer.getBuyerId());
         queryWrapper.eq("status", AddressStatus.START_USE.getType());//获取默认地址
         Address address = addressMapper.selectOne(queryWrapper);
+        if(address == null){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ClearingStatus.ADDRESS_EMPTY.getType();
+        }
         orderItem.setAddress(address.getAddress());//设置地址
         orderItem.setPhone(address.getPhone());
         orderItem.setNicheng(address.getNicheng());//

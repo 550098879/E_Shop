@@ -138,12 +138,24 @@
                     <!--订单历史-->
                     <h2>订单记录</h2>
 
+                    <table id="orderForm" lay-filter="orderForm"></table>
+
+                    <script type="text/html" id="orderForm-list-handle">
+                        <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="furl"
+                                {{ d.status !="1" ? "disabled='disabled'" : "" }}>
+                        <i class="layui-icon layui-icon-edit"></i>
+                        {{ d.status != "2" ? "待收货" : "已签收" }}
+                        </button>
+                        <a class="layui-btn layui-btn-xs" lay-event="view"><i
+                                class="layui-icon layui-icon-list"></i>查看详情</a>
+                    </script>
+
+
                 </div>
                 <div class="layui-tab-item">
                     <!--地址管理-->
                     <div>
                         <button id="addReceiving" class="layui-btn">添加地址</button>
-                        <!--                        <blockquote class="layui-elem-quote layui-quote-nm">只允许存在10条记录</blockquote>-->
                         <div class="layui-form">
                             <table id="receiving" lay-filter="receiving"></table>
                         </div>
@@ -167,7 +179,7 @@
                 <div class="layui-tab-item">
                     <!--充值记录-->
                     <h2>充值记录</h2>
-
+                    <table id="storeHistory" lay-filter="storeHistory"></table>
 
                 </div>
 
@@ -291,6 +303,15 @@
 
 </div>
 
+<!--查看订单详情-->
+<div style="display: none;" id="viewdetails">
+    <h2 align="center">订单详情</h2>
+
+
+
+
+</div>
+
 
 <script>
     layui.config({
@@ -404,13 +425,13 @@
         table.on("tool(receiving)", function (e) {
             console.log(e.data);
 
-            if('del' == e.event){
-                if(e.data.status == 1){
+            if ('del' == e.event) {
+                if (e.data.status == 1) {
                     layer.alert("默认地址不能删除");
                     return;
                 }
-                $.get("/buyer/deleteAddressById",{"addressId":e.data.addressId,},function(res){
-                    layer.confirm("确定要删除该地址吗?",function(con){
+                $.get("/buyer/deleteAddressById", {"addressId": e.data.addressId,}, function (res) {
+                    layer.confirm("确定要删除该地址吗?", function (con) {
                         table.reload("receiving");
                         layer.close(con);
                     });
@@ -429,14 +450,14 @@
             console.log(id);
             var ischeck = obj.elem.checked; //是否被选中
             //执行ajax请求,将其他地址选项设为未使用
-            if(ischeck){
-                $.get("/buyer/setDefault",{"addressId":id,},function(res){
-                    if(res){
+            if (ischeck) {
+                $.get("/buyer/setDefault", {"addressId": id,}, function (res) {
+                    if (res) {
                         table.reload("receiving");
                     }
                 });
-            }else{
-                layer.confirm("必须要选择一个默认的地址",function(c){
+            } else {
+                layer.confirm("必须要选择一个默认的地址", function (c) {
                     table.reload("receiving");
                     layer.close(c);
                 });
@@ -495,6 +516,103 @@
 
                 });
 
+        });
+
+
+        //渲染订单表
+        table.render({
+            id: "orderForm",
+            elem: "#orderForm",
+            url: "/order/findOrderForm",
+            cols: [
+                [{field: "orderId", width: 120, title: "订单号", sort: !0},
+                    {field: "createTime", width: 140, title: "下单时间", sort: !0},
+                    {
+                        field: "deliveryTime", width: 140, title: "发货时间", templet: function (data) {
+                            return data.deliveryTime == null ? "未发货" : data.deliveryTime;
+                        }
+                    },
+                    {
+                        field: "teceiveTime", width: 140, title: "收货时间", templet: function (data) {
+                            return data.teceiveTime == null ? "未收货" : data.teceiveTime;
+                        }
+                    },
+                    {field: "address", width: 130, title: "收货地址"},
+                    {field: "phone", width: 120, title: "联系号码"},
+                    {field: "total", width: 80, title: "总价/￥"},
+                    {
+                        field: "status", width: 80, title: "状态", templet: function (data) {
+                            if (data.status == 0) {
+                                return "未发货";
+                            } else if (data.status == 1) {
+                                return "已发货";
+                            } else if (data.status == 2) {
+                                return "已收货";
+                            }
+                        }
+                    },
+                    {
+                        title: "操作",
+                        width: 200,
+                        align: "center",
+                        fixed: "right",
+                        toolbar: "#orderForm-list-handle"
+                    },]
+            ],
+            page: !0,
+            limit: 10,
+            // height: "full-350",
+            text: "对不起，加载出现异常！",
+        });
+        table.on("tool(orderForm)", function (e) {
+            if ('furl' == e.event) {
+                //收货
+                $.get("/order/changeStatus", {"orderId": e.data.orderId, "status": 2,}, function (res) {
+                    if (res) {
+                        layer.msg("收货成功");
+                        table.reload("orderForm");
+                    }
+                });
+
+            } else if ("view" == e.event) {
+                //查看订单详情
+                //1.发送ajax请求,获取订单详情
+
+
+                //2.将信息填装到弹出窗口中国
+
+
+
+                //3.打开弹出穿
+                layer.open({
+                    type: 1,
+                    title: "订单详情",
+                    content: $("#viewdetails"),
+                    area: ['500px', '600px'],
+                    btn: ['确定', '取消'],
+                });
+
+
+            }
+
+        });
+
+
+        //渲染充值记录表格
+        table.render({
+            id: "storeHistory",
+            elem: "#storeHistory",
+            url: "/buyer/findStoreHistory",
+            cols: [
+                [{field: "storeId", width: 200, title: "充值ID", sort: !0},
+                    {field: "storeTime", width: 200, title: "充值时间", sort: !0},
+                    {field: "amount", width: 200, title: "充值金额"},
+                ]
+            ],
+            page: !0,
+            limit: 10,
+            // height: "full-350",
+            text: "对不起，加载出现异常！",
         });
 
 

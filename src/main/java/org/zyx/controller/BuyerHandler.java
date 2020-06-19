@@ -2,6 +2,7 @@ package org.zyx.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.zyx.VO.DataVO;
 import org.zyx.VO.MapVO;
 import org.zyx.entity.*;
 import org.zyx.enums.AddressStatus;
+import org.zyx.enums.OrderStatus;
 import org.zyx.enums.RegStatus;
 import org.zyx.mapper.AddressMapper;
 import org.zyx.mapper.BuyerMapper;
@@ -183,6 +185,8 @@ public class BuyerHandler {
         return url;
     }
 
+
+    //充值
     @Transactional  //设置事务锁,避免冲突
     @PostMapping("/updateBalance")
     public BigDecimal updateBalance(BigDecimal money, HttpSession session) {
@@ -200,7 +204,7 @@ public class BuyerHandler {
         buyer.setBalance(updBuyer.getBalance());
         session.setAttribute("buyer",buyer);//设置session中的值
 
-        //添加针对订单表记录
+        //添加针对充值表记录
         Store store = new Store();
         store.setBuyerId(buyer.getBuyerId());
         store.setStoreTime(LocalDateTime.now());
@@ -209,6 +213,20 @@ public class BuyerHandler {
 
         return buyer.getBalance();
     }
+
+    @GetMapping("/findStoreHistory")
+    public DataVO<Store> findStoreHistory(int page,int limit,HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        DataVO<Store> dataVO = new DataVO();
+
+        dataVO.setCode(0);
+        dataVO.setMsg("新增订单");
+        QueryWrapper<Store> queryWrapper = new QueryWrapper<Store>().eq("buyer_id", buyer.getBuyerId());
+        dataVO.setCount(storeMapper.selectCount(queryWrapper));
+        dataVO.setData(storeMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords());
+        return dataVO;
+    }
+
 
 
     /**
@@ -269,11 +287,13 @@ public class BuyerHandler {
             return null;
         }
         int buyerId = buyer.getBuyerId();
-
         QueryWrapper<Address> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("buyer_id",buyerId);
         queryWrapper.eq("status",AddressStatus.START_USE.getType());
         Address address = addressMapper.selectOne(queryWrapper);
+        if(address == null){
+            return null;
+        }
         return address.getAddress();
     }
 

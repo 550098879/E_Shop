@@ -79,7 +79,7 @@
                         <p class="activity"><span>活动价</span><i>￥</i><strong class="price"
                                                                             th:text="${good.goods.price}"></strong></p>
                         <p class="address-box"><span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span>
-                            <strong id="address" class="address">江西&nbsp;&nbsp;南昌&nbsp;&nbsp;东湖区</strong>
+                            <strong id="address" class="address"></strong>
                         </p>
                         <p class="activity"><span>库&nbsp;&nbsp;&nbsp;&nbsp;存</span><i class="layui-icon layui-icon-template-1"></i>
                             <span id="stock" th:text="${good.goods.stock}"></span>
@@ -170,7 +170,7 @@
 
         //判断是否登录,并执行ajax请求获取当前用户默认地址
         $.get("/buyer/findDefaultAddress", {}, function (res) {
-            if (res.length > 0) {
+            if (res != null) {
                 $("#address").text(res);
             }
         });
@@ -198,11 +198,19 @@
     //直接购买,增加订单,显示订单详情页
     function shop(goodId,stock) {
         var count = $("#count").val();
+        if($("#address").text().length == 0){
+            layer.confirm("前往设收货地址",function(idx){
+                location.href="/information";
+                layer.close(idx);
+            });
+            return;
+        }
         if(stock == 0){
             layer.msg("库存不足");
             return;
         }
         if(count == 0){
+            layer.msg("选择购买数量");
             return;
         }
 
@@ -227,6 +235,10 @@
 
                         } else if (res == 0) {
                             layer.confirm("账户余额不足,请前往充值后购买", function () {
+                                location.href = "/information";
+                            });
+                        }else if (res == 4) {
+                            layer.confirm("请先设置默认地址", function () {
                                 location.href = "/information";
                             });
                         }
@@ -256,11 +268,19 @@
     //添加购物车
     function addCart(goodId,stock) {
         var count = $("#count").val();
+        if($("#address").text().length == 0){
+            layer.confirm("前往设收货地址",function(idx){
+                location.href="/information";
+                layer.close(idx);
+            });
+            return;
+        }
         if(stock == 0){
             layer.msg("库存不足");
             return;
         }
         if(count == 0){
+            layer.msg("选择购买数量");
             return;
         }
        $.get("/shop/addCart",{"goodId":goodId,"count":count,},function(res){

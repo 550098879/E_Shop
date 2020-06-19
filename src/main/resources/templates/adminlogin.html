@@ -97,6 +97,7 @@
 
         //提交
         form.on('submit(LAY-user-login-submit)', function (obj) {
+            $("#LAY-user-login-submit").attr("disabled","disabled");
             var code = show_num.join("").toLowerCase();
             var inputCode = obj.field.vercode.toLowerCase();
             if (inputCode != code) {

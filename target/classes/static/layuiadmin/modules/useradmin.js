@@ -24,7 +24,6 @@
         }]],
         page: !0,
         limit: 10,
-        height: "full-220",
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-user-manage)", function (e) {
         e.data;
@@ -84,7 +83,6 @@
         text: "对不起，加载出现异常！",
         page: !0,
         limit: 10,
-        height: "full-220",
     }), i.on("tool(LAY-user-back-manage)", function (e) {
         e.data;
         if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
@@ -168,7 +166,6 @@
         ]],
         page: !0,
         limit: 10,
-        height: "full-220",
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-goods-type)", function (e) {
         e.data;
@@ -232,7 +229,6 @@
         ]],
         page: !0,
         limit: 10,
-        height: "full-220",
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-goods-list)", function (e) {
         e.data;
