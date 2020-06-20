@@ -149,7 +149,7 @@ table.render({
      var html = demo.innerHTML,
      orderDetails = document.getElementById('orderDetails');
     $.get("/shop/getShopCartInfo", {}, function (res) {
-        orderDe``tails.innerHTML = mm.renderHtml(html, res)
+        orderDetails.innerHTML = mm.renderHtml(html, res)
         element.render();
     });
 </script>
@@ -183,4 +183,5 @@ $.ajax({
 public void clearing(@RequestBody Map carIdList, HttpSession session){
     carIdList.forEach((k,v)->System.out.println("key : " + k + " value : " + v));
 }
+
 ```

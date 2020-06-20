@@ -167,7 +167,7 @@
                             <table id="receiving" lay-filter="receiving"></table>
                         </div>
                         <script type="text/html" id="statusTpl">
-                            <input type="checkbox" lay-skin="switch" lay-text="默认|未使用"
+                            <input type="checkbox" lay-skin="switch" lay-text="默认中|未使用"
                                    lay-filter="changeDefault"
                                    {{ d.status== "1" ? "checked" : "" }} />
                         </script>
@@ -511,6 +511,7 @@
                     table.reload("receiving");
                     layer.close(c);
                 });
+                table.reload("receiving");
 
             }
 

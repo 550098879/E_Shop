@@ -75,13 +75,30 @@ layui.define(['layer'], function (exports) {
                         case 'add layui-btn':
                             input.value = val + 1;
                             //发出ajax请求添加商品数量
+                            var carId = that.childNodes[3].defaultValue;
+                            $.get("/shop/updateCount",{"count":input.value ,"carId":carId},function(res){
+                                if(res){
+                                }else{
+                                    layer.msg("库存不足");
+                                    input.value = val;//不变
+                                }
+                            });
+
+
                             getSubTotal(this)
                             break;
                         case 'less layui-btn':
                             if (val > 1) {
                                 input.value = val - 1;
                                 //发出ajax请求减少商品数量
-
+                                var carId = that.childNodes[3].defaultValue;
+                                $.get("/shop/updateCount",{"count":input.value ,"carId":carId},function(res){
+                                    if(res){
+                                    }else{
+                                        layer.msg("库存不足");
+                                        input.value = val;//不变
+                                    }
+                                });
                             }
                             getSubTotal(this)
                             break;

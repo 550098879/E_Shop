@@ -244,4 +244,19 @@ public class ShopHandler {
         return ClearingStatus.CLEARING_SUCCESS.getType();
     }
 
+    @GetMapping("/updateCount")
+    public boolean updateCount(int count,int carId){
+        GoodCar goodItem = goodCarMapper.selectById(carId);//查询购物车
+        Goods good = goodsMapper.selectById(goodItem.getGoodsId());//获取对应商品
+        if(count > good.getStock()){
+            return false;
+        }
+        goodItem.setNum(count);
+        if(goodCarMapper.updateById(goodItem) == 0){
+            return false;
+        }
+        return true;
+    }
+
+
 }

@@ -265,8 +265,8 @@ public class BuyerHandler {
     public boolean setDefault(int addressId,HttpSession session){
         Buyer buyer = (Buyer) session.getAttribute("buyer");
         int buyerId = buyer.getBuyerId();
-        addressMapper.setDefault(addressId);
-        addressMapper.disableOther(addressId,buyerId);
+        addressMapper.setDefault(addressId);//设置默认
+        addressMapper.disableOther(addressId,buyerId);//禁用其他
 
         return true;
     }
@@ -298,6 +298,9 @@ public class BuyerHandler {
     }
 
 
+    /**
+     * 验证支付密码
+     */
     @PostMapping("/verifyPayPsw")
     public Boolean verifyPayPsw(String payPsw,HttpSession session){
         Buyer buyer = (Buyer) session.getAttribute("buyer");
