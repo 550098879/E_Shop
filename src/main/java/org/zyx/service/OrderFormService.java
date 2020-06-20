@@ -1,7 +1,10 @@
 package org.zyx.service;
 
+import org.zyx.VO.OrderDetailsVO;
 import org.zyx.entity.OrderForm;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderFormService extends IService<OrderForm> {
 
+    OrderDetailsVO getOrderDetailsList(int orderId);
 }

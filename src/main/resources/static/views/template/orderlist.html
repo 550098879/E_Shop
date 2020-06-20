@@ -98,6 +98,12 @@
 
                 } else if ("del" == e.event) {
                     //执行删除
+                    $.get("/order/deleteById", {"orderId": e.data.orderId,}, function (res) {
+                        if (res) {
+                            layer.msg("订单记录删除成功");
+                            table.reload("LAY-order-list");
+                        }
+                    });
                 }
 
             });

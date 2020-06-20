@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zyx.VO.DataVO;
+import org.zyx.VO.OrderDetailsVO;
 import org.zyx.entity.Buyer;
 import org.zyx.entity.OrderForm;
 import org.zyx.enums.OrderStatus;
 import org.zyx.mapper.OrderFormMapper;
+import org.zyx.service.OrderFormService;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ public class OrderHandler {
 
     @Autowired
     private OrderFormMapper orderFormMapper;
+    @Autowired
+    private OrderFormService orderFormService;
 
     @GetMapping("/findOrderForm")
     public DataVO<OrderForm> findOrderForm(int page, int limit, HttpSession session){
@@ -72,11 +76,22 @@ public class OrderHandler {
                 return false;
             }
         }
-
-
         return true;
     }
 
+    @GetMapping("/deleteById")
+    public Boolean deleteById(int orderId){
 
+        if(orderFormMapper.deleteById(orderId) ==0){
+            return false;
+        }
+        return true;
+    }
+
+    @GetMapping("/getOrderDetailsInfo")
+    public OrderDetailsVO getOrderDetailsInfo(int orderId){
+        //使用Service方法获取
+        return  orderFormService.getOrderDetailsList(orderId);
+    }
 
 }

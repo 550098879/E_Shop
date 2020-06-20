@@ -127,9 +127,9 @@
                 </li>
                 <li class="th th-amount">
                     <div class="box-btn layui-clear">
-<!--                        <div class="less layui-btn">-</div>-->
+                        <div class="less layui-btn">-</div>
                         <input class="Quantity-input" type="" name="" value="{{item.goodCar.num}}" disabled="disabled">
-<!--                        <div class="add layui-btn">+</div>-->
+                        <div class="add layui-btn">+</div>
                     </div>
                 </li>
                 <li class="th th-sum">
@@ -156,8 +156,8 @@
                 <span class="batch-dele-btn" style="color: #01AAED;">批量删除</span>
             </div>
             <div class="th batch-deletion">
-                <span  style="color: #bd3d3d;margin-left: 80px;">收货地址:</span>
-                <span id="address"  style="color: #bd3d3d;"></span>
+                <span style="color: #bd3d3d;margin-left: 80px;">收货地址:</span>
+                <span id="address" style="color: #bd3d3d;"></span>
                 <script>
                     $.get("/buyer/findDefaultAddress", {}, function (res) {
                         if (res.length > 0) {
@@ -165,8 +165,8 @@
                         }
                     });
 
-                    $("#address").click(function(){
-                        layer.confirm("使用默认地址,若想要修改请先修改默认地址",function(){
+                    $("#address").click(function () {
+                        layer.confirm("使用默认地址,若想要修改请先修改默认地址", function () {
                             location.href = "/information";
                         });
                     });
@@ -197,7 +197,6 @@
         var html = demo.innerHTML,
             listCont = document.getElementById('list-cont');
         $.get("/shop/getShopCartInfo", {}, function (res) {
-
             listCont.innerHTML = mm.renderHtml(html, res)
             element.render();
             car.init()

@@ -74,11 +74,14 @@ layui.define(['layer'], function (exports) {
                     switch (cls) {
                         case 'add layui-btn':
                             input.value = val + 1;
+                            //发出ajax请求添加商品数量
                             getSubTotal(this)
                             break;
                         case 'less layui-btn':
                             if (val > 1) {
                                 input.value = val - 1;
+                                //发出ajax请求减少商品数量
+
                             }
                             getSubTotal(this)
                             break;
@@ -129,58 +132,72 @@ layui.define(['layer'], function (exports) {
             //结算按钮事件
             clearing.onclick = function () {
                 if (SelectedPieces.innerHTML != 0) {
-                    layer.prompt({formType: 1, title: "请输入支付密码:"}, function (payPsw, index) {
-                        //发送ajax请求,判断支付密码是否正确
-                        $.post("/buyer/verifyPayPsw", {"payPsw": payPsw,}, function (res) {
-                            if (res) {
-                                layer.close(index)
-                                for (var i = 0; i < uls.length; i++) {
-                                    var input = uls[i].getElementsByTagName('input')[0];
-                                    if (input.checked) {
-                                        carIdList[input.id] = input.id;
-                                        uls[i].parentNode.removeChild(uls[i]);//还是要移除商品项,否则会死循环
-                                        i--;
-                                    }
-                                }
-                                //获取到全部的被选中的商品id后,发送ajax请求,完成订单详情页面,及结算信息
-                                $.ajax({
-                                    url: "/shop/clearing",
-                                    type: "POST",
-                                    dataType: "json",
-                                    contentType: "application/json;charset=UTF-8",
-                                    data: JSON.stringify(carIdList),
-                                    success: function (res) {
-                                        if (res == 3) {
-                                            layer.msg("订单结算成功");
-                                        } else if (res == 2) {
-                                            layer.confirm("订单结算失败", function () {
-                                                location.reload();
-                                            });
-                                        } else if (res == 1) {
-                                            layer.confirm("商品库存不足", function () {
-                                                location.reload();
-                                            });
-
-                                        } else if (res == 0) {
-                                            layer.confirm("账户余额不足,请前往充值后购买", function () {
-                                                location.href = "/information";
-                                            });
-                                        }else if (res == 4) {
-                                            layer.confirm("请先设置默认地址", function () {
-                                                location.href = "/information";
-                                            });
+                    //查看购物车商品详情
+                    layer.open({
+                        type: 1,
+                        title: "购物车详情",
+                        content: $("#list-cont"),
+                        area: ['1200px', '700px'],
+                        btn: ['购买', '取消'],
+                        yes: function(index,layero){
+                            layer.close(index);
+                            layer.prompt({formType: 1, title: "请输入支付密码:"}, function (payPsw, index) {
+                                //发送ajax请求,判断支付密码是否正确
+                                $.post("/buyer/verifyPayPsw", {"payPsw": payPsw,}, function (res) {
+                                    if (res) {
+                                        layer.close(index)
+                                        for (var i = 0; i < uls.length; i++) {
+                                            var input = uls[i].getElementsByTagName('input')[0];
+                                            if (input.checked) {
+                                                carIdList[input.id] = input.id;//取出购物车id
+                                                uls[i].parentNode.removeChild(uls[i]);//还是要移除商品项,否则会死循环
+                                                i--;
+                                            }
                                         }
-                                    },
+                                        //获取到全部的被选中的商品id后,发送ajax请求,完成订单详情页面,及结算信息
+                                        $.ajax({
+                                            url: "/shop/clearing",
+                                            type: "POST",
+                                            dataType: "json",
+                                            contentType: "application/json;charset=UTF-8",
+                                            data: JSON.stringify(carIdList),
+                                            success: function (res) {
+                                                if (res == 3) {
+                                                    layer.msg("订单结算成功");
+                                                } else if (res == 2) {
+                                                    layer.confirm("订单结算失败", function () {
+                                                        location.reload();
+                                                    });
+                                                } else if (res == 1) {
+                                                    layer.confirm("商品库存不足", function () {
+                                                        location.reload();
+                                                    });
 
+                                                } else if (res == 0) {
+                                                    layer.confirm("账户余额不足,请前往充值后购买", function () {
+                                                        location.href = "/information";
+                                                    });
+                                                }else if (res == 4) {
+                                                    layer.confirm("请先设置默认地址", function () {
+                                                        location.href = "/information";
+                                                    });
+                                                }
+                                            },
+
+                                        });
+                                        getTotal()
+
+                                    } else {
+                                        layer.msg("支付密码错误,请重试");
+                                        layer.close(index);
+                                    }
                                 });
-                                getTotal()
+                            })
+                        }
+                    });
 
-                            } else {
-                                layer.msg("支付密码错误,请重试");
-                                layer.close(index);
-                            }
-                        });
-                    })
+                    //输入支付密码
+
                 } else {
                     layer.msg('请选择商品')
                 }

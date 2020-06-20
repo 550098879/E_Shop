@@ -11,6 +11,13 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <link rel="icon" href="../images/chongwu.png" type="image/x-icon"/>
+    <style>
+        .layui-col-md4 ul li{
+            margin: 5px;
+        }
+
+
+    </style>
 </head>
 <body>
 
@@ -304,13 +311,56 @@
 </div>
 
 <!--查看订单详情-->
-<div style="display: none;" id="viewdetails">
-    <h2 align="center">订单详情</h2>
+<div style="display: none" id="viewdetails">
+    <h2 align="center" style="margin: 10px 0">订单详情</h2>
 
-
-
+    <div id="orderDetails"></div>
 
 </div>
+<!--模板引擎填装数据-->
+<script type="text/html" id="demo">
+    <div style="width: 100%;height: 500px;overflow: auto;">
+        {{# layui.each(d.goodsVOList,function(index,item){}}
+        <!--导入对应样式数据-->
+        <!--商品信息-->
+        <div style="width: 99%;height:120px;border: 1px solid #e7e1e1; ">
+            <div class="layui-col-md4" align="center"><img src="{{item.cover}}" style="width: 80%;"></div>
+            <div class="layui-col-md4">
+                <ul>
+                    <li>订单号:{{d.orderForm.orderId}}</li>
+                    <li>商品名: {{item.goods.goodsName}}</li>
+                    <li>分类: <span>{{item.superName}}</span> <span>{{item.typeName}}</span></li>
+                    <li>单价: {{item.goods.price}}￥</li>
+
+                </ul>
+            </div>
+            <div class="layui-col-md4">
+                <ul>
+                    <li>数量: {{item.num}}</li>
+                    <li><h3 style="color: red;">小计: {{item.goods.price * item.num}}￥</h3></li>
+                    <li>状态:
+                        <span style="color: #01AAED;">{{ d.orderForm.status != "2" ? "待收货" : "已签收" }}</span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        {{# });}}
+    </div>
+    <!--买家相关信息-->
+    <div>
+        <div class="layui-col-md8">
+            <div>收货地址:{{d.orderForm.address}}</div>
+            <div>手机号:{{d.orderForm.phone}}</div>
+        </div>
+        <div class="layui-col-md4" >
+            <h2 style="color: red;margin-right: 20px;">总计:{{d.orderForm.total}}￥</h2>
+        </div>
+
+    </div>
+
+
+</script>
 
 
 <script>
@@ -576,19 +626,21 @@
 
             } else if ("view" == e.event) {
                 //查看订单详情
-                //1.发送ajax请求,获取订单详情
+                //1.发送ajax请求,获取订单详情,填装数据
+                var html = demo.innerHTML,
+                    orderDetails = document.getElementById('orderDetails');
+                $.get("/order/getOrderDetailsInfo", {"orderId": e.data.orderId,}, function (res) {
+                    console.log(res);
+                    orderDetails.innerHTML = mm.renderHtml(html, res)
+                    element.render();
+                });
 
-
-                //2.将信息填装到弹出窗口中国
-
-
-
-                //3.打开弹出穿
+                //2.打开弹出穿
                 layer.open({
                     type: 1,
                     title: "订单详情",
                     content: $("#viewdetails"),
-                    area: ['500px', '600px'],
+                    area: ['600px', '700px'],
                     btn: ['确定', '取消'],
                 });
 

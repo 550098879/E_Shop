@@ -119,6 +119,42 @@ table.render({
 
 ```
 
+- LayUI模板引擎导入数据
+```html
+<div id="orderDetails"></div>
+
+<script type="text/html" id="demo">
+    {{# layui.each(d.data,function(index,item){}}
+    <!--导入对应样式数据-->
+    <div style="width: 100%;height:120px; ">
+        <div class="layui-col-md4" align="center"><img src="{{item.goodsVO.cover}}" style="width: 80%;"></div>
+        <div class="layui-col-md4">
+            <ul>
+                <li>商品名: {{item.goodsVO.goods.goodsName}}</li>
+                <li>分类: <span>{{item.goodsVO.superName}}</span> <span>{{item.goodsVO.typeName}}</span></li>
+                <li>单价: {{item.goodsVO.goods.price}}</li>
+                <li>数量: {{item.goodCar.num}}</li>
+
+            </ul>
+        </div>
+        <div class="layui-col-md4">
+            <button>已发货</button>
+            <h3>总计:小计: {{item.goodsVO.goods.price * item.goodCar.num}}</h3>
+        </div>
+    </div>
+    {{# });}}
+</script>
+
+<script>
+     var html = demo.innerHTML,
+     orderDetails = document.getElementById('orderDetails');
+    $.get("/shop/getShopCartInfo", {}, function (res) {
+        orderDe``tails.innerHTML = mm.renderHtml(html, res)
+        element.render();
+    });
+</script>
+
+```
 
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页
