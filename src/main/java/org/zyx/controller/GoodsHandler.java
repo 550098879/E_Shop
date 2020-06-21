@@ -3,6 +3,7 @@ package org.zyx.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.UsesSunMisc;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -19,10 +20,12 @@ import org.zyx.mapper.GoodsMapper;
 import org.zyx.mapper.GoodsPicMapper;
 import org.zyx.mapper.GoodsTypeMapper;
 import org.zyx.service.GoodsService;
+import org.zyx.service.GoodsTypeService;
 import org.zyx.utils.ConnectTencentCloud;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,6 +48,8 @@ public class GoodsHandler {
     private GoodsService goodsService;
     @Autowired
     private ConnectTencentCloud cloud;
+    @Autowired
+    private GoodsTypeService goodsTypeService;
 
     @GetMapping("/findAllType")
     public DataVO<TypeVO> findAllType(int page, int limit){
@@ -58,7 +63,7 @@ public class GoodsHandler {
     }
 
     @GetMapping("/findAllGood")
-    public DataVO<GoodsVO> findAllGood(int page, int limit,
+    public DataVO<GoodsVO> findAllGood(int page, int limit, HttpSession session,
                                        @RequestParam(name = "type_id" ,required = false ,defaultValue = "-1") int type_id){
         DataVO<GoodsVO> dataVO = new DataVO();
         dataVO.setCode(0); //返回的code为0,成功
@@ -207,5 +212,15 @@ public class GoodsHandler {
         return modelAndView;
     }
 
+    @GetMapping("/findBySearch")
+    public ModelAndView findBySearch(String title,ModelAndView modelAndView,HttpSession session){
+        List<Goods> goodsList = goodsMapper.selectList(new QueryWrapper<Goods>().like("goods_name", title));
+        List<GoodsVO> searchGoods = goodsService.findByGoodList(goodsList);
+        session.setAttribute("searchGoods",searchGoods);
+        session.setAttribute("title",title);
+        modelAndView.addObject("allTypeList",goodsTypeService.getAllType());
+        modelAndView.setViewName("findBySearch");
+        return modelAndView;
+    }
 
 }

@@ -91,6 +91,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         return getGoodsVOList(Arrays.asList(good)).get(0);
     }
 
+    @Override
+    public List<GoodsVO> findByGoodList(List<Goods> goodsList) {
+
+        return getGoodsVOList(goodsList);
+    }
+
     /**
      * 将商品列表转化为GoodVO
      * @param goodsList 商品list

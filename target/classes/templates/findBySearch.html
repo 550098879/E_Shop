@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>E-Shop宠物商城</title>
+    <title>E-Shop 查找商品</title>
     <link rel="stylesheet" type="text/css" href="../layui/static/css/main.css">
     <link rel="stylesheet" type="text/css" href="../layui/layui/css/layui.css">
     <script src="/js/jquery-1.7.2.min.js"></script>
@@ -30,7 +30,7 @@
             <div class="mallSearch">
                 <form action="/goods/findBySearch" class="layui-form" novalidate>
                     <input type="text" name="title" required lay-verify="required" autocomplete="off"
-                           class="layui-input" placeholder="请输入需要的商品">
+                           class="layui-input" th:value="${session.title}" placeholder="请输入需要的商品">
                     <button class="layui-btn" lay-submit lay-filter="formDemo">
                         <i class="layui-icon layui-icon-search"></i>
                     </button>
@@ -80,15 +80,32 @@
                         <a href="javascript:;" event='newprod'>新品</a>
                         <a href="javascript:;" event='collection'>收藏</a>
                     </div>
-                    <div class="prod-number">
-                      总条数:  <span id="count"></span>
+                    <div class="prod-number" >
+                      总条数:  <span id="count" th:text="${session.searchGoods.size()}"></span>
                     </div>
                     <div class="cont-list layui-clear" id="list-cont">
                         <!--       内容主体         -->
+                        <div class="item"  style="height:270px;width:260px;"
+                             th:if="${session.searchGoods != null}" th:each="item : ${session.searchGoods}">
+                            <div class="img">
+                                <a th:href="'/goods/findById/'+${item.goods.goodId}">
+                                    <img width='80%' height='165.5' style='margin:5% 10%;' align='center' th:src="${item.cover}">
+                                </a>
+                            </div>
+                            <div class="text">
+                                <p class="title" th:text="${item.goods.goodsName}"></p>
+                                <p class="price">
+                                    <span class="pri" th:text="'￥'+${item.goods.price}"></span>
+                                    <span class="nub" th:text="${item.goods.stock}+'库存'"></span>
+                                </p>
+                            </div>
+                        </div>
+                        <h2 align='center' th:if="${session.searchGoods.size() == 0}">暂无该分类的商品!(￣o￣) . z Z　</h2><hr>
                     </div>
 
                     <!-- 分页 -->
-                    <div id="demo0" style="text-align: center;">
+
+                    <div id="demo0" style="text-align: center;display:none;">
                         <button type="button" onclick="getByType(null,1);" class="layui-btn">首页</button>
                         <button type="button" onclick="last();" class="layui-btn">上一页</button>
                         <span id="currPage" style="width: 10px;display: inline-block">1</span>/
@@ -115,7 +132,7 @@
         type_id = window.localStorage.getItem("typeId");
         window.localStorage.removeItem("typeId");
     }
-    getByType(type_id);//初始化,查询全部
+    //getByType(type_id);//不初始化执行查询
 
     function getByType(typeid,page){
         if(typeid != null){
@@ -131,6 +148,7 @@
             let goodList = response.data;
             console.log(response);
             //设置页面属性,分页属性
+            $("#demo0").show();
             $("#count").text(response.count);
             pageCounts = Math.ceil(response.count/limit);
             $("#pageCount").text(pageCounts);

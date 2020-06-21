@@ -47,4 +47,8 @@ public interface GoodsService extends IService<Goods> {
      */
     GoodsVO findById(int goodId);
 
+
+    List<GoodsVO> findByGoodList(List<Goods> goodsList);
+
+
 }
