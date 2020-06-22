@@ -28,7 +28,7 @@ public class OrderHandler {
     private OrderFormService orderFormService;
 
     @GetMapping("/findOrderForm")
-    public DataVO<OrderForm> findOrderForm(int page, int limit, HttpSession session){
+    public DataVO<OrderForm> findOrderForm(int page, int limit,Integer status, HttpSession session){
         DataVO<OrderForm> dataVO = new DataVO();
         Buyer buyer = (Buyer) session.getAttribute("buyer");
 
@@ -36,6 +36,9 @@ public class OrderHandler {
         dataVO.setMsg("订单历史");
         QueryWrapper<OrderForm> queryWrapper = new QueryWrapper<OrderForm>().eq("buyer_id", buyer.getBuyerId());
         queryWrapper.orderByDesc("create_time");
+        if(status != null){
+            queryWrapper.eq("status",status);
+        }
         dataVO.setCount(orderFormMapper.selectCount(queryWrapper));
 
         List<OrderForm> orderForms = orderFormMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
@@ -45,7 +48,7 @@ public class OrderHandler {
     }
 
     @GetMapping("/findOrderFormByAdmin")
-    public DataVO<OrderForm> findOrderFormByStatus(int page, int limit, HttpSession session){
+    public DataVO<OrderForm> findOrderFormByStatus(int page, int limit,Integer status, HttpSession session){
         DataVO<OrderForm> dataVO = new DataVO();
 
         dataVO.setCode(0);
@@ -53,7 +56,11 @@ public class OrderHandler {
 //        QueryWrapper<OrderForm> queryWrapper = new QueryWrapper<OrderForm>().eq("status", OrderStatus.CREATE);
         dataVO.setCount(orderFormMapper.selectCount(null));
 
-        List<OrderForm> orderForms = orderFormMapper.selectPage(new Page<>(page, limit), null).getRecords();
+        QueryWrapper<OrderForm> queryWrapper = new QueryWrapper<>();
+        if(status != null){
+            queryWrapper.eq("status",status);
+        }
+        List<OrderForm> orderForms = orderFormMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
         dataVO.setData(orderForms);
 
         return dataVO;

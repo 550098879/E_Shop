@@ -155,6 +155,10 @@ table.render({
 </script>
 
 ```
+- LayUI 筛选表格数据(点击修改url并重载)
+```javascript
+table.reload("tableId" ,{url: newUrl, page:{curr: 1}, where:{}});
+```
 
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页

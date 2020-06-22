@@ -12,11 +12,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <link rel="icon" href="../images/chongwu.png" type="image/x-icon"/>
     <style>
-        .layui-col-md4 ul li{
+        .layui-col-md4 ul li {
             margin: 5px;
         }
-
-
     </style>
 </head>
 <body>
@@ -144,6 +142,10 @@
                 <div class="layui-tab-item">
                     <!--订单历史-->
                     <h2>订单记录</h2>
+                    <button id="complete" class="layui-btn  layui-btn-normal">查看已完成</button>
+                    <button id="uncomplete" class="layui-btn  layui-btn-warm">查看未收货</button>
+                    <button id="waitfor" class="layui-btn layui-btn-danger">查看未发货</button>
+                    <button id="viewAll" class="layui-btn">查看全部</button>
 
                     <table id="orderForm" lay-filter="orderForm"></table>
 
@@ -173,8 +175,7 @@
                         </script>
 
                         <script type="text/html" id="address-list-handle">
-                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
-                                    class="layui-icon layui-icon-edit"></i>编辑</a>
+
                             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
                                     class="layui-icon layui-icon-delete"></i>删除</a>
                         </script>
@@ -247,24 +248,25 @@
     <div class="layui-form" id="pupAddressForm">
 
         <input type="hidden" th:value="${session.buyer.buyerId}" name="buyerId">
+        <input type="hidden" id="addressId" value="0" name="addressId">
 
         <div class="layui-form-item" id="area-picker">
             <div class="layui-form-label">选择省份:</div>
             <div class="layui-input-inline" style="width: 200px;">
                 <select name="province" class="province-selector" data-value="江西省" lay-filter="province-1">
-                    <option value="">请选择省</option>
+                    <option id="province" value="">请选择省</option>
                 </select>
             </div>
             <div class="layui-form-label">选择城市:</div>
             <div class="layui-input-inline" style="width: 200px;">
                 <select name="city" class="city-selector" data-value="赣州市" lay-filter="city-1">
-                    <option value="">请选择市</option>
+                    <option id="city" value="">请选择市</option>
                 </select>
             </div>
             <div class="layui-form-label">选择区县:</div>
             <div class="layui-input-inline" style="width: 200px;">
                 <select name="county" class="county-selector" data-value="章贡区" lay-filter="county-1">
-                    <option value="">请选择区:</option>
+                    <option id="county" value="">请选择区:</option>
                 </select>
             </div>
         </div>
@@ -272,7 +274,8 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">详细地址</label>
             <div class="layui-input-block">
-                <textarea name="particular" placeholder="详细地址(乡镇,街道,门牌号,代收点)" class="layui-textarea"></textarea>
+                <textarea id="particular" name="particular" placeholder="详细地址(乡镇,街道,门牌号,代收点)"
+                          class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -280,7 +283,7 @@
             <label class="layui-form-label">手机号</label>
             <div class="layui-input-block">
                 <input type="tel" name="phone" required lay-verify="required" placeholder="请输入正确的手机号"
-                       autocomplete="off" class="layui-input">
+                       autocomplete="off" class="layui-input" id="phone">
             </div>
         </div>
 
@@ -288,7 +291,7 @@
             <label class="layui-form-label">标签</label>
             <div class="layui-input-block">
                 <input type="text" name="nicheng" required lay-verify="required" placeholder="设置标签(如家,学校,现居住地)"
-                       autocomplete="off" class="layui-input">
+                       autocomplete="off" class="layui-input" id="nicheng">
             </div>
         </div>
 
@@ -301,7 +304,7 @@
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" id="addAddressSub" lay-filter="addAddressSub">添加地址</button>
+                <button class="layui-btn" lay-submit="" id="addAddressSub" lay-filter="addAddressSub">设置地址</button>
             </div>
         </div>
 
@@ -353,7 +356,7 @@
             <div>收货地址:{{d.orderForm.address}}</div>
             <div>手机号:{{d.orderForm.phone}}</div>
         </div>
-        <div class="layui-col-md4" >
+        <div class="layui-col-md4">
             <h2 style="color: red;margin-right: 20px;">总计:{{d.orderForm.total}}￥</h2>
         </div>
 
@@ -563,18 +566,19 @@
                         layer.msg("添加成功");
                         //清空form表单的所有值
                         table.reload("receiving");
+
                     }
 
                 });
 
         });
 
-
+        var req = "/order/findOrderForm";
         //渲染订单表
         table.render({
             id: "orderForm",
             elem: "#orderForm",
-            url: "/order/findOrderForm",
+            url: req,
             cols: [
                 [{field: "orderId", width: 120, title: "订单号", sort: !0},
                     {field: "createTime", width: 140, title: "下单时间", sort: !0},
@@ -649,6 +653,25 @@
             }
 
         });
+
+        //筛选订单表信息
+        $("#complete").click(function(){
+            req = "/order/findOrderForm?status=2";
+            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+        });
+        $("#uncomplete").click(function(){
+            req = "/order/findOrderForm?status=1";
+            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+        });
+        $("#waitfor").click(function(){
+            req = "/order/findOrderForm?status=0";
+            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+        });
+        $("#viewAll").click(function () {
+            req = "/order/findOrderForm";
+            table.reload("orderForm", {url: req, page: {curr: 1}, where: {}});
+        });
+
 
 
         //渲染充值记录表格

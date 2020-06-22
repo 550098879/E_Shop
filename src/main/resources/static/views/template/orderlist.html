@@ -10,12 +10,19 @@
     <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
 </head>
+<style>
+    .layui-col-md4 ul li {
+        margin: 5px;
+    }
+</style>
 <body>
 
 <div class="layui-fluid">
 
-    <button class="layui-btn layui-btn-normal">查看未发货</button>
-    <button class="layui-btn layui-btn-normal">查看全部</button>
+    <button id="complete" class="layui-btn  layui-btn-normal">查看已完成</button>
+    <button id="uncomplete" class="layui-btn  layui-btn-warm">查看未收货</button>
+    <button id="waitfor" class="layui-btn layui-btn-danger">查看未发货</button>
+    <button id="viewAll" class="layui-btn">查看全部</button>
     <div class="layui-card-body">
 
         <table id="LAY-order-list" lay-filter="LAY-order-list"></table>
@@ -25,6 +32,8 @@
                     {{ d.status !="0" ? "disabled='disabled'" : "" }}>
             <i class="layui-icon layui-icon-edit"></i>
             {{ d.status !="0" ? "已发货" : "待发货" }}</button>
+            <a class="layui-btn layui-btn-xs" lay-event="view"><i
+                    class="layui-icon layui-icon-list"></i>查看详情</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
                     class="layui-icon layui-icon-delete"></i>删除</a>
         </script>
@@ -32,15 +41,68 @@
 </div>
 </div>
 
+<!--查看订单详情-->
+<div style="display: none" id="viewdetails">
+    <h2 align="center" style="margin: 10px 0">订单详情</h2>
+
+    <div id="orderDetails"></div>
+
+</div>
+<!--模板引擎填装数据-->
+<script type="text/html" id="demo">
+    <div style="width: 100%;height: 400px;overflow: auto;">
+        {{# layui.each(d.goodsVOList,function(index,item){}}
+        <!--导入对应样式数据-->
+        <!--商品信息-->
+        <div style="width: 99%;height:120px;border: 1px solid #e7e1e1; ">
+            <div class="layui-col-md4" align="center"><img src="{{item.cover}}" style="width: 80%;"></div>
+            <div class="layui-col-md4">
+                <ul>
+                    <li>订单号:{{d.orderForm.orderId}}</li>
+                    <li>商品名: {{item.goods.goodsName}}</li>
+                    <li>分类: <span>{{item.superName}}</span> <span>{{item.typeName}}</span></li>
+                    <li>单价: {{item.goods.price}}￥</li>
+
+                </ul>
+            </div>
+            <div class="layui-col-md4">
+                <ul>
+                    <li>数量: {{item.num}}</li>
+                    <li><h3 style="color: red;">小计: {{item.goods.price * item.num}}￥</h3></li>
+                    <li>状态:
+                        <span style="color: #01AAED;">{{ d.orderForm.status != "2" ? "待收货" : "已签收" }}</span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        {{# });}}
+    </div>
+    <!--买家相关信息-->
+    <div>
+        <div class="layui-col-md8">
+            <div>收货地址:{{d.orderForm.address}}</div>
+            <div>手机号:{{d.orderForm.phone}}</div>
+        </div>
+        <div class="layui-col-md4">
+            <h2 style="color: red;margin-right: 20px;">总计:{{d.orderForm.total}}￥</h2>
+        </div>
+
+    </div>
+
+
+</script>
+
 <script src="../../layuiadmin/layui/layui.js"></script>
 <script>
     layui.config({
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'table'], function () {
-        var $ = layui.$
+    }).use(['index', 'table','mm','element'], function () {
+        var $ = layui.$,mm = layui.mm
             , table = layui.table;
+        var element = layui.element;
         //事件
         table.render({
             id: "LAY-order-list",
@@ -75,7 +137,7 @@
                     },
                     {
                         title: "操作",
-                        width: 200,
+                        width: 300,
                         align: "center",
                         fixed: "right",
                         toolbar: "#table-list-handle"
@@ -85,28 +147,68 @@
             limit: 10,
             text: "对不起，加载出现异常！",
         }),
-            table.on("tool(LAY-order-list)", function (e) {
-                console.log(e.data);
-                if ('edit' == e.event) {
-                    //发货
-                    $.get("/order/changeStatus", {"orderId": e.data.orderId, "status": 1,}, function (res) {
-                        if (res) {
-                            layer.msg("发货成功");
-                            table.reload("LAY-order-list");
-                        }
-                    });
+        table.on("tool(LAY-order-list)", function (e) {
+            console.log(e.data);
+            if ('edit' == e.event) {
+                //发货
+                $.get("/order/changeStatus", {"orderId": e.data.orderId, "status": 1,}, function (res) {
+                    if (res) {
+                        layer.msg("发货成功");
+                        table.reload("LAY-order-list");
+                    }
+                });
 
-                } else if ("del" == e.event) {
-                    //执行删除
-                    $.get("/order/deleteById", {"orderId": e.data.orderId,}, function (res) {
-                        if (res) {
-                            layer.msg("订单记录删除成功");
-                            table.reload("LAY-order-list");
-                        }
-                    });
-                }
+            } else if ("del" == e.event) {
+                //执行删除
+                $.get("/order/deleteById", {"orderId": e.data.orderId,}, function (res) {
+                    if (res) {
+                        layer.msg("订单记录删除成功");
+                        table.reload("LAY-order-list");
+                    }
+                });
+            }else if ("view" == e.event) {
+                //查看订单详情
+                //1.发送ajax请求,获取订单详情,填装数据
+                var html = demo.innerHTML,
+                    orderDetails = document.getElementById('orderDetails');
+                $.get("/order/getOrderDetailsInfo", {"orderId": e.data.orderId,}, function (res) {
+                    console.log(res);
+                    orderDetails.innerHTML = mm.renderHtml(html, res)
+                    element.render();
+                });
 
-            });
+                //2.打开弹出穿
+                layer.open({
+                    type: 1,
+                    title: "订单详情",
+                    content: $("#viewdetails"),
+                    area: ['600px', '600px'],
+                    btn: ['确定', '取消'],
+                });
+
+
+            }
+
+        });
+
+
+        //筛选订单表信息
+        $("#complete").click(function () {
+            req = "/order/findOrderFormByAdmin?status=2";
+            table.reload("LAY-order-list", {url: req, page: {curr: 1}, where: {}});
+        });
+        $("#uncomplete").click(function () {
+            req = "/order/findOrderFormByAdmin?status=1";
+            table.reload("LAY-order-list", {url: req, page: {curr: 1}, where: {}});
+        });
+        $("#waitfor").click(function () {
+            req = "/order/findOrderFormByAdmin?status=0";
+            table.reload("LAY-order-list", {url: req, page: {curr: 1}, where: {}});
+        });
+        $("#viewAll").click(function () {
+            req = "/order/findOrderFormByAdmin";
+            table.reload("LAY-order-list", {url: req, page: {curr: 1}, where: {}});
+        });
 
 
     });

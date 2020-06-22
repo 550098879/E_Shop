@@ -76,27 +76,34 @@
                         <p class="reference"><span>参考价</span>
                             <del th:text="'￥'+${good.goods.price+50}"></del>
                         </p>
-                        <p class="activity"><span>活动价</span><i>￥</i><strong class="price"
-                                                                            th:text="${good.goods.price}"></strong></p>
+                        <p class="activity"><span>活动价</span><i>￥</i>
+                            <strong class="price" id="price" th:text="${good.goods.price}"></strong></p>
                         <p class="address-box"><span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span>
                             <strong id="address" class="address"></strong>
                         </p>
-                        <p class="activity"><span>库&nbsp;&nbsp;&nbsp;&nbsp;存</span><i class="layui-icon layui-icon-template-1"></i>
+                        <p class="activity"><span>库&nbsp;&nbsp;&nbsp;&nbsp;存</span><i
+                                class="layui-icon layui-icon-template-1"></i>
                             <span id="stock" th:text="${good.goods.stock}"></span>
                         </p>
                     </div>
                     <div class="choose-attrs">
                         <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
                             <div class="number-cont">
-                                <button  th:onclick="'countCut('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">-</button>
-                                <input  id="count" readonly name="count" value="0" style="width: 42px; height: 36px; float: none;">
-                                <button th:onclick="'countAdd('+${good.goods.stock}+')'" class="layui-btn layui-btn-primary">+</button>
+                                <button th:onclick="'countCut('+${good.goods.stock}+')'"
+                                        class="layui-btn layui-btn-primary">-
+                                </button>
+                                <input id="count" readonly name="count" value="0"
+                                       style="width: 42px; height: 36px; float: none;">
+                                <button th:onclick="'countAdd('+${good.goods.stock}+')'"
+                                        class="layui-btn layui-btn-primary">+
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="choose-btns">
-                        <button th:onclick="'shop('+${good.goods.goodId}+','+${good.goods.stock}+')'" th:if="${session.buyer != null}"
+                        <button th:onclick="'shop('+${good.goods.goodId}+','+${good.goods.stock}+')'"
+                                th:if="${session.buyer != null}"
                                 class="layui-btn layui-btn-primary purchase-btn">立刻购买
                         </button>
                         <a href="/login" th:if="${session.buyer == null}"
@@ -137,16 +144,29 @@
 <div th:include="footer :: footer"></div>
 
 <!--隐藏弹出窗口-->
-    <!--订单结算窗口-->
+<!--订单结算窗口-->
 <div style="display: none" id="orderClearing">
-
-
-
-
+    <h2 align="center">订单详情</h2>
+    <div class="layui-col-md4" align="center">
+        <img th:src="${good.cover}" width="80%">
+    </div>
+    <div class="layui-col-md4">
+        <ul>
+            <li>商品名:<span th:text="${good.goods.goodsName}"></span></li>
+            <li>购买数量:<span id="hidCount"></span></li>
+            <li>收货地址:
+                <textarea  class="layui-textarea" id="hidAddress"></textarea>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-col-md4">
+        <ul>
+            <li th:if="${session.buyer != null}">账户余额:<span th:text="${session.buyer.balance}"></span></li>
+            <li><h2 style="color: red">总计:￥<span id="total"></span></h2></li>
+        </ul>
+    </div>
 
 </div>
-
-
 
 
 <script src="/layui/layui/layui.all.js"></script>
@@ -172,6 +192,7 @@
         $.get("/buyer/findDefaultAddress", {}, function (res) {
             if (res != null) {
                 $("#address").text(res);
+                $("#hidAddress").text(res);
             }
         });
 
@@ -180,14 +201,15 @@
 
     //数量input事件,通过th:创建事件,方便传递参数
     function countAdd(maxSize) {
-        $("#count").val(Number($("#count").val())+1);
+        $("#count").val(Number($("#count").val()) + 1);
         if ($("#count").val() > maxSize) {
             $("#count").val(maxSize);
         }
         //$("#stock").text(maxSize- $("#count").val());减少库存
     }
+
     function countCut(maxSize) {
-        $("#count").val($("#count").val()-1);
+        $("#count").val($("#count").val() - 1);
         if ($("#count").val() <= 0) {
             $("#count").val(0);
         }
@@ -196,107 +218,110 @@
 
 
     //直接购买,增加订单,显示订单详情页
-    function shop(goodId,stock) {
+    function shop(goodId, stock) {
         var count = $("#count").val();
-        if($("#address").text().length == 0){
-            layer.confirm("前往设收货地址",function(idx){
-                location.href="/information";
+        $("#hidCount").text(count);
+        if ($("#address").text().length == 0) {
+            layer.confirm("前往设收货地址", function (idx) {
+                location.href = "/information";
                 layer.close(idx);
             });
             return;
         }
-        if(stock == 0){
+        if (stock == 0) {
             layer.msg("库存不足");
             return;
         }
-        if(count == 0){
+        if (count == 0) {
             layer.msg("选择购买数量");
             return;
         }
+        $("#total").text(Number(count) * Number($("#price").text()));
+        layer.open({
+            type: 1,
+            title: "订单详情",
+            content: $("#orderClearing"),
+            area: ['600px', '400px'],
+            btn: ['购买', '取消'],
+            yes: function (index, layero) {
+                layer.prompt({formType: 1, title: "请输入支付密码:"}, function (payPsw, index) {
 
-        layer.prompt({formType: 1, title: "请输入支付密码:"}, function (payPsw, index) {
+                    $.post("/buyer/verifyPayPsw", {"payPsw": payPsw,}, function (istrue) {
+                        if (istrue) {
+                            $.get("/shop/shop", {"goodId": goodId, "count": count,}, function (res) {
 
-            $.post("/buyer/verifyPayPsw", {"payPsw": payPsw,}, function (istrue) {
-                if (istrue){
+                                if (res == 3) {
+                                    layer.msg("订单结算成功");
+                                    location.reload();
+                                } else if (res == 2) {
+                                    layer.confirm("订单结算失败", function () {
+                                        location.reload();
+                                    });
+                                } else if (res == 1) {
+                                    layer.confirm("商品库存不足", function () {
+                                        location.reload();
+                                    });
 
-                    $.get("/shop/shop",{"goodId":goodId,"count":count,},function(res){
+                                } else if (res == 0) {
+                                    layer.confirm("账户余额不足,请前往充值后购买", function () {
+                                        location.href = "/information";
+                                    });
+                                } else if (res == 4) {
+                                    layer.confirm("请先设置默认地址", function () {
+                                        location.href = "/information";
+                                    });
+                                }
 
-                        if (res == 3) {
-                            layer.msg("订单结算成功");
-                            location.reload();
-                        } else if (res == 2) {
-                            layer.confirm("订单结算失败", function () {
-                                location.reload();
                             });
-                        } else if (res == 1) {
-                            layer.confirm("商品库存不足", function () {
-                                location.reload();
-                            });
 
-                        } else if (res == 0) {
-                            layer.confirm("账户余额不足,请前往充值后购买", function () {
-                                location.href = "/information";
-                            });
-                        }else if (res == 4) {
-                            layer.confirm("请先设置默认地址", function () {
-                                location.href = "/information";
-                            });
+
+                            layer.close(index);
+                        } else {
+                            layer.msg("支付密码错误,请重试");
+                            layer.close(index);
                         }
 
-                    });
+                    })
 
 
-                    layer.close(index);
-                }else{
-                    layer.msg("支付密码错误,请重试");
-                    layer.close(index);
-                }
-
-            })
-
-
-        });
-
-
-
-
-
+                });
+            }
+        })
 
 
     }
 
     //添加购物车
-    function addCart(goodId,stock) {
+    function addCart(goodId, stock) {
         var count = $("#count").val();
-        if($("#address").text().length == 0){
-            layer.confirm("前往设收货地址",function(idx){
-                location.href="/information";
+        if ($("#address").text().length == 0) {
+            layer.confirm("前往设收货地址", function (idx) {
+                location.href = "/information";
                 layer.close(idx);
             });
             return;
         }
-        if(stock == 0){
+        if (stock == 0) {
             layer.msg("库存不足");
             return;
         }
-        if(count == 0){
+        if (count == 0) {
             layer.msg("选择购买数量");
             return;
         }
-       $.get("/shop/addCart",{"goodId":goodId,"count":count,},function(res){
-           console.log(res);
-            if(res == 0){
+        $.get("/shop/addCart", {"goodId": goodId, "count": count,}, function (res) {
+            console.log(res);
+            if (res == 0) {
                 layer.msg("商品添加购物车成功,请登录后购买");
             }
-            if(res == 1){
+            if (res == 1) {
                 layer.msg("商品添加购物车成功");
             }
-            if(res == 2){
+            if (res == 2) {
                 layer.msg("加入购物车失败,请刷新后重试");
             }
 
-       });
-
+        });
 
 
     }
