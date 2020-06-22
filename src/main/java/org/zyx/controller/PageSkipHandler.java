@@ -34,14 +34,6 @@ public class PageSkipHandler {
         modelAndView.setViewName("index");
         return modelAndView;
     }
-    @GetMapping("/about")
-    public String about(){
-        return "about";
-    }
-    @GetMapping("/buytoday")
-    public String buytoday(){
-        return "buytoday";
-    }
 
     @GetMapping("/commodity")
     public ModelAndView commodity(ModelAndView modelAndView){

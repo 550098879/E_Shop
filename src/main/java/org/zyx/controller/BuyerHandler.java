@@ -140,9 +140,15 @@ public class BuyerHandler {
      * @return
      */
     @PostMapping("/updateById")
-    public boolean updateById(Buyer buyer) {
-        System.out.println(buyer);
+    public boolean updateById(Buyer buyer,HttpSession session) {
         if (buyerMapper.updateById(buyer) > 0) {
+            //更新session:
+            Buyer buyer1 = (Buyer) session.getAttribute("buyer");
+            String face = buyer1.getFace();
+            buyer = buyerMapper.selectById(buyer.getBuyerId());
+            buyer.setFace(face);
+            session.setAttribute("buyer",buyer);
+
             return true;
         }
         return false;
@@ -210,7 +216,6 @@ public class BuyerHandler {
         store.setStoreTime(LocalDateTime.now());
         store.setAmount(money);
         storeMapper.insert(store);
-
         return buyer.getBalance();
     }
 
@@ -222,6 +227,22 @@ public class BuyerHandler {
         dataVO.setCode(0);
         dataVO.setMsg("新增订单");
         QueryWrapper<Store> queryWrapper = new QueryWrapper<Store>().eq("buyer_id", buyer.getBuyerId());
+        dataVO.setCount(storeMapper.selectCount(queryWrapper));
+        dataVO.setData(storeMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords());
+        return dataVO;
+    }
+
+    //管理员所需充值记录
+    @GetMapping("/findStoreHistoryAll")
+    public DataVO<Store> findStoreHistoryAll(int page,int limit,Integer buyerId,HttpSession session){
+        DataVO<Store> dataVO = new DataVO();
+        dataVO.setCode(0);
+        dataVO.setMsg("买家充值记录");
+        QueryWrapper<Store> queryWrapper = new QueryWrapper<>();
+        if(buyerId != null){
+            queryWrapper.eq("buyer_id",buyerId);
+        }
+
         dataVO.setCount(storeMapper.selectCount(queryWrapper));
         dataVO.setData(storeMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords());
         return dataVO;

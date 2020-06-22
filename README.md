@@ -163,7 +163,7 @@ table.reload("tableId" ,{url: newUrl, page:{curr: 1}, where:{}});
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页
 - a标签未添加href属性时,在onclick事件中进行跳转会回到当前页面,先执行onclick事件,后执行href跳转
-
+- isNaN() 函数用于检查其参数是否是非数字值。如isNaN("test");返回的是true，而isNaN("123")，则返回false；
 
 ### 前端ajax请求发送json对象以及服务端获取
 ```javascript

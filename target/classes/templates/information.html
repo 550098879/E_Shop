@@ -109,23 +109,6 @@
                             </div>
                         </div>
 
-                        <div class="layui-form-item" style="margin-left:-50px;">
-                            <label class="layui-form-label">登录密码</label>
-                            <div class="layui-input-block">
-                                <input type="password" name="psw" required lay-verify="required"
-                                       placeholder="(不小于6位数,字母,下划线,数字)"
-                                       autocomplete="off" class="layui-input" th:value="${session.buyer.psw}">
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item" style="margin-left:-50px;">
-                            <label class="layui-form-label">支付密码</label>
-                            <div class="layui-input-block">
-                                <input type="password" name="payPsw" required lay-verify="required" placeholder="(6位数字)"
-                                       autocomplete="off" class="layui-input" th:value="${session.buyer.payPsw}">
-                            </div>
-                        </div>
-
                         <div class="layui-form-item login-btn">
                             <div class="layui-input-block">
                                 <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit">
@@ -194,7 +177,54 @@
 
                 <div class="layui-tab-item">
                     <!--安全中心-->
-                    <h2>安全中心</h2>
+                    <div class="layui-tab layui-tab-card">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">修改登录密码</li>
+                            <li>修改支付密码</li>
+                        </ul>
+                        <div class="layui-tab-content" style="height: 450px;">
+                            <div class="layui-tab-item layui-show" >
+
+                                <div class="layui-form-item" >
+                                    <label class="layui-form-label">密码</label>
+                                    <div class="layui-input-block">
+                                        <input type="password" name="psw" required lay-verify="required" placeholder="请输入密码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" >
+                                    <label class="layui-form-label">确认密码</label>
+                                    <div class="layui-input-block">
+                                        <input type="password" name="psw2" required lay-verify="required" placeholder="确认密码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <button id="changePsw" class="layui-btn  layui-btn-warm">修改登录密码</button>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="layui-form-item" >
+                                    <label class="layui-form-label">支付密码</label>
+                                    <div class="layui-input-block">
+                                        <input type="password" name="payPsw" required lay-verify="required" placeholder="请输入支付密码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">确认支付密码</label>
+                                    <div class="layui-input-block">
+                                        <input type="password" name="payPsw2" required lay-verify="required" placeholder="确认支付密码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <button id="changePayPsw" class="layui-btn  layui-btn-warm">修改支付密码</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
 
                 </div>
             </div>
@@ -400,16 +430,16 @@
             console.log(data.field);
 
             //针对数据进行校检
-            if (!/^\d{6}$/.test(data.field.payPsw)) {
-                layer.alert("支付密码必须为6位数字");
-                return false;
-            }
+            // if (!/^\d{6}$/.test(data.field.payPsw)) {
+            //     layer.alert("支付密码必须为6位数字");
+            //     return false;
+            // }
             var $ = layui.$;
             $.post("/buyer/updateById", data.field, function (data) {
                 if (data >= 0) {
                     //更新成功
                     layer.msg("更新成功");
-
+                    location.reload();
                 }
             });
 
@@ -690,6 +720,14 @@
             // height: "full-350",
             text: "对不起，加载出现异常！",
         });
+
+
+        //安全中心业务逻辑
+        //修改密码:
+
+
+
+
 
 
     });

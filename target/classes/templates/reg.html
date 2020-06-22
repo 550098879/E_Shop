@@ -38,16 +38,15 @@
         <div class="inner-cont0">
             <div class="inner-cont1 w1200">
                 <div class="inner-cont2">
+                    <a href="/" class="active">首页</a>
                     <a href="/commodity" class="active">所有商品</a>
-                    <a href="/buytoday">今日新增</a>
-                    <a href="/about">关于我们</a>
                 </div>
             </div>
         </div>
     </div>
     <div class="login-bg">
         <div class="login-cont w1200">
-            <div class="form-box" style="margin-top: -100px;margin-right: 30%;height: 600px;">
+            <div class="form-box" style="margin-top: -150px;margin-right: 30%;height: 650px;">
                 <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                     <legend>自定义注册</legend>
                     <!--    表单主体       -->
@@ -79,6 +78,22 @@
                         <label class="layui-form-label">确认密码</label>
                         <div class="layui-input-block">
                             <input type="password" name="psw2" required lay-verify="required" placeholder="确认密码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">支付密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="payPsw" required lay-verify="required" placeholder="请输入支付密码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-left:-50px;">
+                        <label class="layui-form-label">确认支付</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="payPsw2" required lay-verify="required" placeholder="确认支付密码"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -141,6 +156,15 @@
                 return false;
             }else if(data.field.psw != data.field.psw2){
                 layer.alert("两次输入的密码不一致");
+                return false;
+            }else if(data.field.payPsw != data.field.payPsw2){
+                layer.alert("两次输入的支付密码不一致");
+                return false;
+            }else if (!/^\d{6}$/.test(data.field.payPsw)) {
+                layer.alert("支付密码必须为6位数字");
+                return false;
+            }else if (!/^\d{6}$/.test(data.field.payPsw2)) {
+                layer.alert("支付密码必须为6位数字");
                 return false;
             }
 
