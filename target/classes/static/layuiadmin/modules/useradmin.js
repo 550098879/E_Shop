@@ -6,7 +6,7 @@
         //管理员表
         elem: "#LAY-user-manage",
         url: '/users/findAll',
-        cols: [[{type: "checkbox", fixed: "left"},
+        cols: [[
             {field: "userId", width: 100, title: "ID", sort: !0},
             {field: "loginName", title: "用户名", width: 200}, // templet: "#imgTpl" 加载图片
             {field: "status", title: "状态" , width: 200 ,templet:function(data){
@@ -28,6 +28,11 @@
     }), i.on("tool(LAY-user-manage)", function (e) {
         e.data;
         if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
+            console.log(e.data);
+            if(e.data.userRole != 0){
+                layer.msg("超级管理员无法删除");
+                return;
+            }
             if(t != 123){
                 layer.alert("口令错误");
                 return;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.zyx.VO.GoodsVO;
 import org.zyx.entity.Goods;
 import org.zyx.enums.GoodPicType;
+import org.zyx.enums.GoodsStatus;
 import org.zyx.mapper.GoodsMapper;
 import org.zyx.mapper.GoodsPicMapper;
 import org.zyx.mapper.GoodsTypeMapper;
@@ -42,7 +43,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public List<GoodsVO> findAllGoods(int page,int limit) {
 
-        List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), null).getRecords();
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", GoodsStatus.PUT_AWAY.getType());
+        List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
 
         return getGoodsVOList(goodsList);
     }

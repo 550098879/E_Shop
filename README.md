@@ -75,7 +75,7 @@ table.render({
 ```
 - layui 自定义表单组件:
 ```html
-    <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+    <div class="layui-form">
         <button class="layui-btn" lay-submit="lay-buyer-submit" lay-filter="lay-buyer-submit" >注册</button>
     </div>
 <!--lay-submit="" 这个属性是必须的-->

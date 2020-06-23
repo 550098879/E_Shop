@@ -16,6 +16,7 @@ import org.zyx.entity.Goods;
 import org.zyx.entity.GoodsPic;
 import org.zyx.entity.GoodsType;
 import org.zyx.enums.GoodPicType;
+import org.zyx.enums.GoodsStatus;
 import org.zyx.mapper.GoodsMapper;
 import org.zyx.mapper.GoodsPicMapper;
 import org.zyx.mapper.GoodsTypeMapper;
@@ -72,11 +73,12 @@ public class GoodsHandler {
         //分页查询
         if(type_id == -1){
             List<GoodsVO> allGoods = goodsService.findAllGoods(page, limit);
-            dataVO.setCount(goodsService.count());
+            dataVO.setCount(goodsMapper.selectCount(new QueryWrapper<Goods>().eq("status", GoodsStatus.PUT_AWAY.getType())));
             dataVO.setData(allGoods);
         }else{
             QueryWrapper<Goods> wrapper = new QueryWrapper<>();
             wrapper.eq("type_id",type_id);
+            wrapper.eq("status", GoodsStatus.PUT_AWAY.getType());
             dataVO.setCount(goodsMapper.selectCount(wrapper));
             List<GoodsVO> allGoods = goodsService.findByTypeId(type_id,page,limit);
             dataVO.setData(allGoods);

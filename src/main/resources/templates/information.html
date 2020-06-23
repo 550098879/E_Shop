@@ -183,47 +183,60 @@
                             <li>修改支付密码</li>
                         </ul>
                         <div class="layui-tab-content" style="height: 450px;">
-                            <div class="layui-tab-item layui-show" >
-
-                                <div class="layui-form-item" >
-                                    <label class="layui-form-label">密码</label>
-                                    <div class="layui-input-block">
-                                        <input type="password" name="psw" required lay-verify="required" placeholder="请输入密码"
-                                               autocomplete="off" class="layui-input">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form">
+                                    <input type="hidden" name="buyerId" th:value="${session.buyer.buyerId}">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">密码</label>
+                                        <div class="layui-input-block">
+                                            <input type="password" name="psw" required lay-verify="required"
+                                                   placeholder="请输入新的密码"
+                                                   autocomplete="off" class="layui-input">
+                                        </div>
                                     </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">确认密码</label>
+                                        <div class="layui-input-block">
+                                            <input type="password" name="psw2" required lay-verify="required"
+                                                   placeholder="确认密码"
+                                                   autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <button class="layui-btn" lay-submit="changePsw"
+                                            lay-filter="changePsw">修改登录密码
+                                    </button>
                                 </div>
 
-                                <div class="layui-form-item" >
-                                    <label class="layui-form-label">确认密码</label>
-                                    <div class="layui-input-block">
-                                        <input type="password" name="psw2" required lay-verify="required" placeholder="确认密码"
-                                               autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <button id="changePsw" class="layui-btn  layui-btn-warm">修改登录密码</button>
                             </div>
                             <div class="layui-tab-item">
-                                <div class="layui-form-item" >
-                                    <label class="layui-form-label">支付密码</label>
-                                    <div class="layui-input-block">
-                                        <input type="password" name="payPsw" required lay-verify="required" placeholder="请输入支付密码"
-                                               autocomplete="off" class="layui-input">
+                                <div class="layui-form">
+                                    <input type="hidden" name="buyerId" th:value="${session.buyer.buyerId}">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">支付密码</label>
+                                        <div class="layui-input-block">
+                                            <input type="password" name="payPsw" required lay-verify="required"
+                                                   placeholder="请输入新的支付密码"
+                                                   autocomplete="off" class="layui-input">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">确认支付密码</label>
-                                    <div class="layui-input-block">
-                                        <input type="password" name="payPsw2" required lay-verify="required" placeholder="确认支付密码"
-                                               autocomplete="off" class="layui-input">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">确认支付密码</label>
+                                        <div class="layui-input-block">
+                                            <input type="password" name="payPsw2" required lay-verify="required"
+                                                   placeholder="确认支付密码"
+                                                   autocomplete="off" class="layui-input">
+                                        </div>
                                     </div>
+                                    <button class="layui-btn" lay-submit="changePayPsw"
+                                            lay-filter="changePayPsw">修改支付密码
+                                    </button>
                                 </div>
-                                <button id="changePayPsw" class="layui-btn  layui-btn-warm">修改支付密码</button>
                             </div>
 
                         </div>
                     </div>
-
 
 
                 </div>
@@ -685,23 +698,22 @@
         });
 
         //筛选订单表信息
-        $("#complete").click(function(){
+        $("#complete").click(function () {
             req = "/order/findOrderForm?status=2";
-            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+            table.reload("orderForm", {url: req, page: {curr: 1}, where: {}});
         });
-        $("#uncomplete").click(function(){
+        $("#uncomplete").click(function () {
             req = "/order/findOrderForm?status=1";
-            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+            table.reload("orderForm", {url: req, page: {curr: 1}, where: {}});
         });
-        $("#waitfor").click(function(){
+        $("#waitfor").click(function () {
             req = "/order/findOrderForm?status=0";
-            table.reload("orderForm" ,{url: req, page:{curr: 1}, where:{}});
+            table.reload("orderForm", {url: req, page: {curr: 1}, where: {}});
         });
         $("#viewAll").click(function () {
             req = "/order/findOrderForm";
             table.reload("orderForm", {url: req, page: {curr: 1}, where: {}});
         });
-
 
 
         //渲染充值记录表格
@@ -725,9 +737,64 @@
         //安全中心业务逻辑
         //修改密码:
 
+        form.on('submit(changePsw)', function (data) {
+            data.field;//获取表单中的所有数据(json格式)
+            console.log(data.field);
+            //针对数据进行校检
+            if (data.field.psw != data.field.psw2) {
+                layer.alert("两次输入的密码不同");
+                return false;
+            }
+            layer.prompt({formType: 1, title: "请验证旧登录密码"}, function (input, idx) {
+                var $ = layui.$;
+                $.post("/buyer/verifyPsw",{"psw":input,},function(res){
+                    if(res){
+                        $.post("/buyer/updateById", data.field, function (data) {
+                            if (data >= 0) {
+                                //更新成功
+                                layer.msg("密码更新成功");
+                                location.href="/buyer/logout";
+                            }
+                        });
+                    }else{
+                        layer.msg("密码验证失败,请重试");
+                    }
+                });
 
+                layer.close(idx);
+            });
+        });
 
+        form.on('submit(changePayPsw)', function (data) {
+            data.field;//获取表单中的所有数据(json格式)
+            console.log(data.field);
+            //针对数据进行校检
+            if (!/^\d{6}$/.test(data.field.payPsw)) {
+                layer.alert("支付密码必须为6位数字");
+                return false;
+            } else if (data.field.payPsw != data.field.payPsw2) {
+                layer.alert("两次输入的密码不同");
+                return false;
+            }
+            layer.prompt({formType: 1, title: "请验证旧支付密码"}, function (input, idx) {
+                var $ = layui.$;
+                $.post("/buyer/verifyPayPsw",{"payPsw":input,},function(res){
+                    if(res){
+                        $.post("/buyer/updateById", data.field, function (data) {
+                            if (data >= 0) {
+                                //更新成功
+                                layer.msg("支付密码更新成功");
+                            }
+                        });
+                    }else{
+                        layer.msg("支付密码验证失败,请重试");
+                    }
+                });
 
+                layer.close(idx);
+            });
+
+        });
 
 
     });

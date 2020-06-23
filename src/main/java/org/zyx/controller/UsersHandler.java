@@ -84,6 +84,11 @@ public class UsersHandler {
         if(admin != null){
             login.setCode(0);
             login.setMsg("登陆成功");
+
+            //更新管理员状态
+            admin.setStatus(1);
+            usersMapper.updateById(admin);
+
             Map map = new HashMap<>();
             map.put("access_token",UUID.randomUUID());
             login.setData(map);

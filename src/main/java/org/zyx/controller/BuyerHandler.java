@@ -331,5 +331,17 @@ public class BuyerHandler {
         return false;
     }
 
+    /**
+     * 验证密码
+     */
+    @PostMapping("/verifyPsw")
+    public Boolean verifyPsw(String psw,HttpSession session){
+        Buyer buyer = (Buyer) session.getAttribute("buyer");
+        if(buyer.getPsw().equals(psw)){
+            return true;
+        }
+        return false;
+    }
+
 
 }
