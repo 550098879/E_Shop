@@ -18,13 +18,14 @@
 
         function setLink() {
             let superType = $("#superId");
-            $.getJSON("/goods/findSuper", {}, function (data) {
+            $.get("/goods/findSuper", {}, function (data) {
                 $.each(data, function (index, goodType) {
                     var op = $("<option>", {
                         "text": goodType.typeName,
                         "value": goodType.typeId,
                     });
                     superType.append(op);
+                    location.reload();
                 });
 
             });
@@ -53,6 +54,8 @@
             <select name="superId" lay-verify="required" id="superId" lay-filter="superId">
                 <option value="0">请选择宠物品种</option>
                 <!--               使用js添加数据-->
+
+
 
             </select>
         </div>

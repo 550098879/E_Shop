@@ -65,7 +65,17 @@
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            $.post("/goods/addGood", field);
+                            $.post("/goods/addGood", field,function(res){
+
+                                if(res == 0){
+                                    layer.msg("商品添加成功");
+                                }else if(res == 1){
+                                    layer.msg("商品名不可重复");
+                                }else if(res == 2){
+                                    layer.msg("商品名添加失败,请重试");
+                                }
+
+                            });
                             console.log(field);
 
                             table.reload("LAY-goods-list"); //数据刷新

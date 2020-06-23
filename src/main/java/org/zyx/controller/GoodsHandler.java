@@ -155,12 +155,20 @@ public class GoodsHandler {
 
 
     @PostMapping("/addGood")
-    public void addGood(Goods goods,String cover){
+    public Integer addGood(Goods goods,String cover){
         //先添加商品
+        System.out.println(goods);
+        System.out.println(cover);
+
+        if(goodsMapper.selectOne(new QueryWrapper<Goods>().eq("goods_name",goods.getGoodsName())) != null){
+            return 1;
+        }
 
         if(goods.getGoodId() == 0){
             goods.setGoodId(null);
-            goodsMapper.insert(goods);
+            if(goodsMapper.insert(goods) == 0){
+                return 2;
+            }
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("goods_name",goods.getGoodsName());
             goods = goodsMapper.selectOne(queryWrapper);
@@ -174,6 +182,7 @@ public class GoodsHandler {
             goodsMapper.updateById(goods);
         }
 
+        return 0;
     }
 
     @GetMapping("/deleteById")

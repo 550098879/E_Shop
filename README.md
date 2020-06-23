@@ -189,3 +189,5 @@ public void clearing(@RequestBody Map carIdList, HttpSession session){
 }
 
 ```
+
+- 部署服务器后需要放行端口
