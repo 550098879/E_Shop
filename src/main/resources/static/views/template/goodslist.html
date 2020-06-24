@@ -41,14 +41,12 @@
 <div style="display: none;" id="popAddGood">
     <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin"
          style="padding: 20px 30px 0 0;">
-
-        <input type="hidden" value="0" name="goodId">
-
+        <input type="hidden" value="0" name="goodId" id="goodId">
         <div class="layui-form-item">
             <label class="layui-form-label">商品名</label>
             <div class="layui-input-inline">
                 <input type="text" name="goodsName" lay-verify="required" placeholder="请输入商品名" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" id="goodsName">
             </div>
         </div>
         <div class="layui-form-item">
@@ -76,21 +74,21 @@
             <label class="layui-form-label">单价</label>
             <div class="layui-input-inline">
                 <input type="text" name="price" lay-verify="required" placeholder="请输入单价" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" id="price">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">总数量</label>
             <div class="layui-input-inline">
                 <input type="text" name="stock" lay-verify="required" placeholder="请输入总数量" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" id="stock">
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="remark" placeholder="请输入备注(不超过200字)" class="layui-textarea"></textarea>
+                <textarea name="remark" placeholder="请输入备注(不超过200字)" class="layui-textarea" id="remark"></textarea>
             </div>
         </div>
 
@@ -98,10 +96,10 @@
             <label class="layui-form-label">封面</label>
             <div class="layui-input-inline">
                 <input type="text" name="cover" lay-verify="required" placeholder="请上传图片" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" id="coverVal">
             </div>
             <button style="float: left;" type="button" class="layui-btn" id="layuiadmin-upload-cover">上传封面</button>
-            <img id="cover" width="150px">
+            <img id="cover" width="100px">
         </div>
 
         <!--        <div class="layui-form-item">-->
@@ -111,9 +109,12 @@
         <!--            </div>-->
         <!--        </div>-->
         <div class="layui-form-item" style="margin-left: 100px">
-            <button class="layui-btn" lay-submit lay-filter="LAY-good-add-submit">执行</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="LAY-good-add-submit">执行操作</button>
+<!--                <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            </div>
         </div>
+
     </div>
 </div>
 
@@ -128,8 +129,7 @@
         var $ = layui.$, form = layui.form
             , upload = layui.upload
             , table = layui.table;
-
-
+        var openWindow = null;
         //动态渲染顶级分类的数据
         let superType = $("#superId");
         $.get("/goods/findSuper", {}, function (data) {
@@ -180,27 +180,37 @@
         });
 
         form.on('submit(LAY-good-add-submit)', function (data) {
-            console.log(field);
             var field = data.field;
+            console.log(field);
+            if(field.typeId == "0" || field.superId == "0"){
+                layer.alert("必须选择商品类型");
+                return false;
+            }
             $.post("/goods/addGood", field, function (res) {
-                if (res == 0) {
-                    layer.msg("商品添加成功");
-                } else if (res == 1) {
-                    layer.alert("商品名不可重复");
-                } else if (res == 2) {
-                    layer.alert("商品名添加失败,请重试");
-                }
+                layer.alert(res);
                 table.reload("LAY-goods-list"); //数据刷新
+                layer.close(openWindow);
             });
 
 
         });
 
 
-        //事件
+        //添加商品事件
         var active = {
             add: function () {
-                layer.open({
+                // $('#layuiadmin-form-admin')[0].reset();
+                // form.render();
+                $("#goodId").val(0);
+                $("#goodsName").val("");
+                $("#price").val("");
+                $("#stock").val("");
+                $("#remark").val("");
+                $("#cover").attr("src","");
+                $("#coverVal").val("");
+                $("#superId").val(0);
+                $("#typeId").val(0);
+                openWindow = layer.open({
                     type: 1
                     , title: '添加商品'
                     , content: $("#popAddGood")
@@ -282,12 +292,22 @@
                     })
                 });
             } else if ("edit" === e.event) {
-                var data = e.data;
+                var field = e.data;
                 //将数据填装到编辑表中
-                console.log(data);
+                console.log(field);
+                $("#goodId").val(field.goods.goodId);
+                $("#goodsName").val(field.goods.goodsName);
+                $("#price").val(field.goods.price);
+                $("#stock").val(field.goods.stock);
+                $("#remark").val(field.goods.remark);
+                $("#cover").attr("src",field.cover);
+                $("#coverVal").val(field.reqCover);
+                // $("#superId").val(field.goods.superId);
+                // $("#typeId").val(field.goods.typeId);
 
+                form.render();
 
-                layer.open({
+                openWindow = layer.open({
                     type: 1,
                     title: "编辑商品",
                     content: $("#popAddGood"),

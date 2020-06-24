@@ -73,7 +73,7 @@ public class GoodsHandler {
         //分页查询
         if(type_id == -1){
             List<GoodsVO> allGoods = goodsService.findAllGoods(page, limit);
-            dataVO.setCount(goodsMapper.selectCount(new QueryWrapper<Goods>().eq("status", GoodsStatus.PUT_AWAY.getType())));
+            dataVO.setCount(goodsMapper.selectCount(null));
             dataVO.setData(allGoods);
         }else{
             QueryWrapper<Goods> wrapper = new QueryWrapper<>();
@@ -155,19 +155,18 @@ public class GoodsHandler {
 
 
     @PostMapping("/addGood")
-    public Integer addGood(Goods goods,String cover){
+    public String addGood(Goods goods,String cover){
         //先添加商品
         System.out.println(goods);
         System.out.println(cover);
 
-        if(goodsMapper.selectOne(new QueryWrapper<Goods>().eq("goods_name",goods.getGoodsName())) != null){
-            return 1;
-        }
-
         if(goods.getGoodId() == 0){
+            if(goodsMapper.selectOne(new QueryWrapper<Goods>().eq("goods_name",goods.getGoodsName())) != null){
+                return "商品重名了,请重试";
+            }
             goods.setGoodId(null);
             if(goodsMapper.insert(goods) == 0){
-                return 2;
+                return "商品添加失败";
             }
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("goods_name",goods.getGoodsName());
@@ -179,10 +178,17 @@ public class GoodsHandler {
             goodsPic.setPicType(GoodPicType.cover.getType());
             goodsPicMapper.insert(goodsPic);
         }else{
-            goodsMapper.updateById(goods);
+            goodsMapper.updateById(goods);//更新商品
+            QueryWrapper<GoodsPic> wrapper = new QueryWrapper<GoodsPic>();
+            wrapper.eq("goods_id", goods.getGoodId());
+            wrapper.eq("pic_type", GoodPicType.cover.getType());
+            GoodsPic goodsPic = goodsPicMapper.selectOne(wrapper);
+            goodsPic.setPicPath(cover);
+            goodsPicMapper.updateById(goodsPic);//更新图片
+            return "商品更新成功";
         }
 
-        return 0;
+        return "商品添加成功";
     }
 
     @GetMapping("/deleteById")

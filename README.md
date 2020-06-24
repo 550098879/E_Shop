@@ -103,9 +103,9 @@ table.render({
             base: '../layui/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
           }).use(['mm'],function(){
               var  mm = layui.mm;//下拉框依赖模块
-               
+              var openWin = null;
               $("#id").click(function(){
-                layer.open({
+               openWin = layer.open({
                             type: 1,
                             title: "测试",
                             content: $("#test"),
@@ -113,7 +113,7 @@ table.render({
                             btn: ['确定', '取消'],
                             });
                 });
-
+                layer.close(openWin);
         });
     </script>
 
@@ -159,12 +159,18 @@ table.render({
 ```javascript
 table.reload("tableId" ,{url: newUrl, page:{curr: 1}, where:{}});
 ```
+### LayUI的表单区别:  
+
+- 使用div作为表单,可以使用事件坚挺的方式提交表单,但无法使用reset方法重置表单
+- 使用form作为表单,可以使用form表单,但在提交的时候回绑定自带的提交事件导致ajax请求失败
+
+
 
 ### js技巧
 -  window.location.href = document.referrer ; 回到前一页并刷新该页
 - a标签未添加href属性时,在onclick事件中进行跳转会回到当前页面,先执行onclick事件,后执行href跳转
 - isNaN() 函数用于检查其参数是否是非数字值。如isNaN("test");返回的是true，而isNaN("123")，则返回false；
-
+-  window.parent.location.reload(); 刷新父窗口
 ### 前端ajax请求发送json对象以及服务端获取
 ```javascript
 //js

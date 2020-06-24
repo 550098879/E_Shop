@@ -43,9 +43,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public List<GoodsVO> findAllGoods(int page,int limit) {
 
-        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", GoodsStatus.PUT_AWAY.getType());
-        List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), queryWrapper).getRecords();
+        List<Goods> goodsList = goodsMapper.selectPage(new Page<>(page, limit), null).getRecords();
 
         return getGoodsVOList(goodsList);
     }
@@ -119,6 +117,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             wrapper.eq("goods_id",good.getGoodId());
             //返回真实的url
             String picPath = goodsPicMapper.selectOne(wrapper).getPicPath();
+            goodsVO.setReqCover(picPath);
             String key = picPath.substring(picPath.lastIndexOf('/'));
             goodsVO.setCover(cloud.getUrl(key));
             goodsVOList.add(goodsVO);

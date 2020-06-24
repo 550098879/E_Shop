@@ -12,5 +12,6 @@ public class GoodsVO {
     private String superName;
     private String cover;//封面
     private int num;//商品购买的数量
+    private String reqCover;
 
 }

@@ -420,6 +420,7 @@
         var layarea = layui.layarea;
         var table = layui.table;
         var $ = layui.$;
+        var openWin = null;
         //监听头像修改
         upload.render({
             elem: '#changeFace'
@@ -576,7 +577,7 @@
 
         //添加收货地址
         $("#addReceiving").on("click", function () {
-            layer.open({
+            openWin =  layer.open({
                 type: 1,
                 title: "添加收货地址",
                 content: $("#pupAddress"),
@@ -609,6 +610,7 @@
                         layer.msg("添加成功");
                         //清空form表单的所有值
                         table.reload("receiving");
+                        layer.close(openWin);
 
                     }
 
