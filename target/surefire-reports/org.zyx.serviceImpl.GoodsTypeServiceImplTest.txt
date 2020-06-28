@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.zyx.serviceImpl.GoodsTypeServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.383 s - in org.zyx.serviceImpl.GoodsTypeServiceImplTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.259 s - in org.zyx.serviceImpl.GoodsTypeServiceImplTest

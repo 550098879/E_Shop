@@ -40,7 +40,7 @@ function startAutoPlay(){
           index = 0;
        }
        changeImg();
-   },3000)
+   },4000)
 }
 
 function changeImg(){

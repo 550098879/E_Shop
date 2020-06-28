@@ -208,8 +208,9 @@
                 $("#remark").val("");
                 $("#cover").attr("src","");
                 $("#coverVal").val("");
-                $("#superId").val(0);
-                $("#typeId").val(0);
+                // $("#superId").val("0");
+                // $("#typeId").val("0");
+                form.render();
                 openWindow = layer.open({
                     type: 1
                     , title: '添加商品'
@@ -302,7 +303,7 @@
                 $("#remark").val(field.goods.remark);
                 $("#cover").attr("src",field.cover);
                 $("#coverVal").val(field.reqCover);
-                // $("#superId").val(field.goods.superId);
+                 $("#superId").val(field.goods.superId);
                 // $("#typeId").val(field.goods.typeId);
 
                 form.render();

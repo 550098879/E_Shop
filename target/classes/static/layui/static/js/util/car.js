@@ -154,7 +154,7 @@ layui.define(['layer'], function (exports) {
                         type: 1,
                         title: "购物车详情",
                         content: $("#list-cont"),
-                        area: ['1200px', '700px'],
+                        area: ['1200px', '600px'],
                         btn: ['购买', '取消'],
                         yes: function(index,layero){
                             layer.close(index);
