@@ -27,8 +27,8 @@ import java.util.List;
 public class ConnectTencentCloud {
 
     private static COSClient cosClient = null;
-    private String SecretId = "AKIDM1TnJaOWBbrrdCrbThfYJwLTM0NTrMvG";
-    private String SecretKey = "K1SyQbWKsLlxwNYVGwMfjurY0LUegSy8";
+    private String SecretId = "******";
+    private String SecretKey = "*********";
     private String apCity = "ap-guangzhou";//存储桶地域
     private static String  bucketName = "01-start-1302118368";//存储桶名称
 
