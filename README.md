@@ -171,6 +171,7 @@ table.reload("tableId" ,{url: newUrl, page:{curr: 1}, where:{}});
 - a标签未添加href属性时,在onclick事件中进行跳转会回到当前页面,先执行onclick事件,后执行href跳转
 - isNaN() 函数用于检查其参数是否是非数字值。如isNaN("test");返回的是true，而isNaN("123")，则返回false；
 -  window.parent.location.reload(); 刷新父窗口
+- 清除事件绑定: $("#id").unbind("click");
 ### 前端ajax请求发送json对象以及服务端获取
 ```javascript
 //js
@@ -198,3 +199,31 @@ public void clearing(@RequestBody Map carIdList, HttpSession session){
 
 - 部署服务器后需要放行端口
 - 项目部署语句 : nohup java -jar E_Shop-1.0-SNAPSHOT.jar >logger.txt &
+
+
+
+### Spring MVC 模板Thymeleaf配置类(待测试)
+```java
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+   import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+   
+   @Configuration
+   public class MvcConfig implements WebMvcConfigurer {
+   
+   	public void addViewControllers(ViewControllerRegistry registry) {
+   		registry.addViewController("/home").setViewName("home");
+   		registry.addViewController("/").setViewName("home");
+   		registry.addViewController("/hello").setViewName("hello");
+   		registry.addViewController("/login").setViewName("login");
+   	}
+   
+   }
+
+```
+
+### 版本更新
+-  2020-7-1: 集成swagger 接口文档框架 , 访问路径: http://localhost:7777/swagger-ui.html
+
+
+

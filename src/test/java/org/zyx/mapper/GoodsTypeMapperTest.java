@@ -24,4 +24,8 @@ class GoodsTypeMapperTest {
         wrapper.eq("super_id",0);
         goodsTypeMapper.selectList(wrapper).forEach(System.out::println);
     }
+
+ 
+
+
 }
