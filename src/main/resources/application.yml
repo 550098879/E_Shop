@@ -4,8 +4,8 @@ spring:
   datasource:
     username: root
     password: 550098879
-#    134.175.219.59
-    url: jdbc:mysql://134.175.219.59:3306/eshop?serverTimezone=UTC
+#    远程数据库ip地址
+    url: jdbc:mysql://*****:3306/eshop?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource                #druid连接池
 
